@@ -1,3 +1,3 @@
 # later
 
-simple translater that use browser.
+simple translator that use browser.
