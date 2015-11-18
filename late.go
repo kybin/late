@@ -17,12 +17,12 @@ type book struct {
 }
 
 type chapter struct {
-	snipets []snipet
+	snippets []snippet
 }
 
-// snipet is a string block of resonable length.
+// snippet is a string block of resonable length.
 // user will decide how long will it be.
-type snipet struct {
+type snippet struct {
 	orig string
 	trans string
 }
@@ -48,14 +48,14 @@ func main() {
 			if !cf.IsDir() {
 				continue
 			}
-			chap := chapter{snipets:make([]snipet, 0)}
+			chap := chapter{snippets:make([]snippet, 0)}
 			cdir := filepath.Join(bdir, cf.Name())
-			snipetFiles, err := ioutil.ReadDir(cdir)
+			snippetFiles, err := ioutil.ReadDir(cdir)
 			if err != nil {
 				log.Fatal(err)
 			}
 			var orig, trans string
-			for _, f := range snipetFiles {
+			for _, f := range snippetFiles {
 				// lasts are files
 				if f.IsDir() {
 					continue
@@ -75,8 +75,8 @@ func main() {
 					trans = string(t)
 				}
 			}
-			snip := snipet{orig:orig, trans:trans}
-			chap.snipets = append(chap.snipets, snip)
+			snip := snippet{orig:orig, trans:trans}
+			chap.snippets = append(chap.snippets, snip)
 			bk.chapters = append(bk.chapters, chap)
 		}
 		books = append(books, bk)
