@@ -6,7 +6,7 @@ package main
 
 type book struct {
 	title string
-	chapters []chaper
+	chapters []chapter
 }
 
 type chapter struct {
