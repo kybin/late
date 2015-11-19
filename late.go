@@ -1,13 +1,12 @@
 package main
 
 import (
-	"os"
-	"fmt"
 	"log"
 	"io/ioutil"
 	"path/filepath"
 	"html/template"
 	"strconv"
+	"net/http"
 )
 
 // directory struct: {root}/{book title}/{chapter num}/{block num}
@@ -29,6 +28,18 @@ type chapter struct {
 type snippet struct {
 	Orig string
 	Trans string
+}
+
+func testHandler(w http.ResponseWriter, r *http.Request, bk book) {
+	w.Header().Set("Content-Type", "text/html")
+	t, err := template.ParseFiles("index.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = t.Execute(w, bk)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
@@ -99,15 +110,8 @@ func main() {
 		}
 		books = append(books, bk)
 	}
-	fmt.Println(books)
-	tmpl, err := ioutil.ReadFile("index.html")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	t, err := template.New("index").Parse(string(tmpl))
-	err = t.Execute(os.Stdout, books[0])
-	if err != nil {
-		log.Fatal(err)
-	}
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		testHandler(w, r, books[0])
+	})
+	http.ListenAndServe(":8080", nil)
 }
