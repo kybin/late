@@ -1,4 +1,5 @@
-<html5>
+<!DOCTYPE html5>
+<html>
 
 <head>
 <meta charset="UTF-8">
@@ -58,34 +59,14 @@
 </head>
 
 <body>
-	<div id="title">Later</div>
+	<div id="title">{{.Title}}</div>
 	<div id="tab-selector">
-		<div id="tab">Chapter1</div>
-		<div id="tab">Chapter2</div>
-		<div id="tab">Chapter3</div>
-		<div id="tab">Chapter4</div>
+		{{range .Chapters}}<div id="tab">Capter{{.Num}}</div>{{end}}
 	</div>
 	<div id="main">
-		<div id="blank"></div>
-		<div id="sticky">
-			<div id="sticky-top">this is sparta</div>
-			<div id="sticky-bottom">이것이 스파르타다</div>
-		</div>
-		<div id="blank"></div>
-		<div id="sticky">
-			<div id="sticky-top">this is sparta</div>
-			<div id="sticky-bottom">이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 이것이 스파르타다 </div>
-		</div>
-		<div id="blank"></div>
-		<div id="sticky">
-			<div id="sticky-top">this is sparta</div>
-			<div id="sticky-bottom">이것이 스파르타다<br>이것이 스파르타다<br>이것이 스파르타다<br>이것이 스파르타다<br>이것이 스파르타다<br></div>
-		</div>
-		<div id="blank"></div>
-		<div id="sticky">
-			<div id="sticky-top"><p>this is sparta</p><p>this is sparta</p><p>this is sparta</p><p>this is sparta</p></div>
-			<div id="sticky-bottom">이것이 스파르타다</div>
-		</div>
+		{{with index .Chapters 0}}
+			{{range .Snippets}}<div id="blank"></div>{{printf "\n"}}<div id="sticky"><div id="sticky-top">{{.Orig}}</div><div id="sticky-bottom">{{.Trans}}</div>{{printf "\n"}}</div>{{printf "\n"}}{{end}}
+		{{end}}
 	</div>
 </body>
 

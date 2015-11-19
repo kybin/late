@@ -1,10 +1,13 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"log"
 	"io/ioutil"
 	"path/filepath"
+	"html/template"
+	"strconv"
 )
 
 // directory struct: {root}/{book title}/{chapter num}/{block num}
@@ -17,6 +20,7 @@ type book struct {
 }
 
 type chapter struct {
+	Num int
 	Snippets []snippet
 }
 
@@ -48,7 +52,11 @@ func main() {
 			if !cf.IsDir() {
 				continue
 			}
-			chap := chapter{Snippets:make([]snippet, 0)}
+			cnum, err := strconv.Atoi(cf.Name())
+			if err != nil {
+				log.Fatal(err)
+			}
+			chap := chapter{Num:cnum, Snippets:make([]snippet, 0)}
 			cdir := filepath.Join(bdir, cf.Name())
 			snippetFiles, err := ioutil.ReadDir(cdir)
 			if err != nil {
@@ -92,4 +100,14 @@ func main() {
 		books = append(books, bk)
 	}
 	fmt.Println(books)
+	tmpl, err := ioutil.ReadFile("index.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	t, err := template.New("index").Parse(string(tmpl))
+	err = t.Execute(os.Stdout, books[0])
+	if err != nil {
+		log.Fatal(err)
+	}
 }
