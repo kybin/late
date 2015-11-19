@@ -12,19 +12,19 @@ import (
 // and make following structs.
 
 type book struct {
-	title string
-	chapters []chapter
+	Title string
+	Chapters []chapter
 }
 
 type chapter struct {
-	snippets []snippet
+	Snippets []snippet
 }
 
 // snippet is a string block of resonable length.
 // user will decide how long will it be.
 type snippet struct {
-	orig string
-	trans string
+	Orig string
+	Trans string
 }
 
 func main() {
@@ -38,7 +38,7 @@ func main() {
 		if !bf.IsDir() {
 			continue
 		}
-		bk := book{title:bf.Name(), chapters:make([]chapter, 0)}
+		bk := book{Title:bf.Name(), Chapters:make([]chapter, 0)}
 		bdir := filepath.Join(root, bf.Name())
 		chapterFiles, err := ioutil.ReadDir(bdir)
 		if err != nil {
@@ -48,7 +48,7 @@ func main() {
 			if !cf.IsDir() {
 				continue
 			}
-			chap := chapter{snippets:make([]snippet, 0)}
+			chap := chapter{Snippets:make([]snippet, 0)}
 			cdir := filepath.Join(bdir, cf.Name())
 			snippetFiles, err := ioutil.ReadDir(cdir)
 			if err != nil {
@@ -84,10 +84,10 @@ func main() {
 						trans = string(t)
 					}
 				}
-				snip := snippet{orig:orig, trans:trans}
-				chap.snippets = append(chap.snippets, snip)
+				snip := snippet{Orig:orig, Trans:trans}
+				chap.Snippets = append(chap.Snippets, snip)
 			}
-			bk.chapters = append(bk.chapters, chap)
+			bk.Chapters = append(bk.Chapters, chap)
 		}
 		books = append(books, bk)
 	}
