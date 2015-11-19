@@ -56,27 +56,37 @@ func main() {
 			}
 			var orig, trans string
 			for _, f := range snippetFiles {
-				// lasts are files
-				if f.IsDir() {
+				if !f.IsDir() {
 					continue
 				}
-				fpath := filepath.Join(cdir, f.Name())
-				if f.Name() == "orig" {
-					o, err := ioutil.ReadFile(fpath)
-					if err != nil {
-						log.Fatal(err)
-					}
-					orig = string(o)
-				} else if f.Name() == "trans" {
-					t, err := ioutil.ReadFile(fpath)
-					if err != nil {
-						log.Fatal(err)
-					}
-					trans = string(t)
+				sdir := filepath.Join(cdir, f.Name())
+				files, err := ioutil.ReadDir(sdir)
+				if err != nil {
+					log.Fatal(err)
 				}
+				for _, f := range files {
+					// lasts are files
+					if f.IsDir() {
+						continue
+					}
+					fpath := filepath.Join(sdir, f.Name())
+					if f.Name() == "orig" {
+						o, err := ioutil.ReadFile(fpath)
+						if err != nil {
+							log.Fatal(err)
+						}
+						orig = string(o)
+					} else if f.Name() == "trans" {
+						t, err := ioutil.ReadFile(fpath)
+						if err != nil {
+							log.Fatal(err)
+						}
+						trans = string(t)
+					}
+				}
+				snip := snippet{orig:orig, trans:trans}
+				chap.snippets = append(chap.snippets, snip)
 			}
-			snip := snippet{orig:orig, trans:trans}
-			chap.snippets = append(chap.snippets, snip)
 			bk.chapters = append(bk.chapters, chap)
 		}
 		books = append(books, bk)
