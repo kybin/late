@@ -43,10 +43,23 @@
 	border-radius:8px;
 }
 
+#sticky-new {
+	cursor:pointer;
+	width:600px;
+	border-style:dotted;
+	border-width:2px;
+	border-radius:8px;
+	color:#C0C0C0;
+}
+
+#sticky-new:hover {
+	color:black;
+}
+
 #sticky-top {
 	min-height:50px;
-	border-style:solid;
-	border-width:0px 0px 2px 0px;
+	border-style:inherit;
+	border-width:0px 0px 1px 0px;
 	padding:20px;
 }
 
@@ -67,6 +80,7 @@
 		{{with index .Chapters 0}}
 			{{range .Snippets}}<div id="blank"></div>{{printf "\n"}}<div id="sticky"><div id="sticky-top">{{.Orig}}</div><div id="sticky-bottom">{{.Trans}}</div>{{printf "\n"}}</div>{{printf "\n"}}{{end}}
 		{{end}}
+		<div id="blank"></div><div id="sticky-new"><div id="sticky-top"></div><div id="sticky-bottom"></div></div>
 	</div>
 </body>
 
