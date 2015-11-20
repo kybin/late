@@ -37,7 +37,6 @@
 }
 
 #sticky {
-	width:600px;
 	border-style:solid;
 	border-width:3px;
 	border-radius:8px;
@@ -45,27 +44,33 @@
 
 #sticky-new {
 	cursor:pointer;
-	width:600px;
-	border-style:dotted;
-	border-width:2px;
+	border-style:solid;
+	border-width:3px;
 	border-radius:8px;
 	color:#C0C0C0;
 }
 
 #sticky-new:hover {
-	color:black;
+	color:#848484;
 }
 
 #sticky-top {
-	min-height:50px;
 	border-style:inherit;
 	border-width:0px 0px 1px 0px;
-	padding:20px;
+	padding:5px;
 }
 
 #sticky-bottom {
-	min-height:50px;
-	padding:20px;
+	padding:5px;
+}
+
+textarea {
+	padding:5px;
+	border:none;
+	width:600px;
+	min-height:80px;
+	resize:none;
+	cursor:inherit;
 }
 
 </style>
@@ -78,9 +83,29 @@
 	</div>
 	<div id="main">
 		{{with index .Chapters 0}}
-			{{range .Snippets}}<div id="blank"></div>{{printf "\n"}}<div id="sticky"><div id="sticky-top">{{.Orig}}</div><div id="sticky-bottom">{{.Trans}}</div>{{printf "\n"}}</div>{{printf "\n"}}{{end}}
+			{{range .Snippets}}
+				<div id="blank">
+				</div>
+				<div id="sticky">
+					<div id="sticky-top">
+						<textarea>{{.Orig}}</textarea>
+					</div>
+					<div id="sticky-bottom">
+						<textarea>{{.Trans}}</textarea>
+					</div>
+				</div>
+			{{end}}
 		{{end}}
-		<div id="blank"></div><div id="sticky-new"><div id="sticky-top"></div><div id="sticky-bottom"></div></div>
+		<div id="blank">
+		</div>
+		<div id="sticky-new">
+			<div id="sticky-top">
+				<textarea></textarea>
+			</div>
+			<div id="sticky-bottom">
+				<textarea></textarea>
+			</div>
+		</div>
 	</div>
 </body>
 
