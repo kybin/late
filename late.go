@@ -42,6 +42,11 @@ func testHandler(w http.ResponseWriter, r *http.Request, bk book) {
 	}
 }
 
+func updateHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("hi")
+	log.Println(*r)
+}
+
 func main() {
 	root := "./testroot"
 	bookFiles, err := ioutil.ReadDir(root)
@@ -110,6 +115,11 @@ func main() {
 		}
 		books = append(books, bk)
 	}
+	http.HandleFunc("/update", updateHandler)
+
+	fs := http.StripPrefix("/script/", http.FileServer(http.Dir("script/")))
+	http.Handle("/script/", fs)
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		testHandler(w, r, books[0])
 	})

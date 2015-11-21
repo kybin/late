@@ -3,6 +3,27 @@
 
 <head>
 <meta charset="UTF-8">
+
+<script type="text/javascript" src="script/jquery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#sticky-new").on({
+		click:function() {
+			$.ajax({
+				url: "/update",
+				data: {
+					test:"are you alright?"
+				},
+				success: function( data ) {
+					console.log("success");
+				}
+			});
+		}
+	});
+});
+</script>
+
 <style>
 #title {
 	text-align:center;
