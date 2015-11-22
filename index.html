@@ -8,7 +8,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$("#sticky-new").on({
+	$(".sticky-new").on({
 		click:function() {
 			$.ajax({
 				url: "/update",
@@ -52,18 +52,18 @@ $(document).ready(function() {
 	margin:0 auto;
 }
 
-#blank {
+.blank {
 	width:600px;
 	height:50px;
 }
 
-#sticky {
+.sticky {
 	border-style:solid;
 	border-width:3px;
 	border-radius:8px;
 }
 
-#sticky-new {
+.sticky-new {
 	cursor:pointer;
 	border-style:solid;
 	border-width:3px;
@@ -71,17 +71,17 @@ $(document).ready(function() {
 	color:#C0C0C0;
 }
 
-#sticky-new:hover {
+.sticky-new:hover {
 	color:#848484;
 }
 
-#sticky-top {
+.sticky-top {
 	border-style:inherit;
 	border-width:0px 0px 1px 0px;
 	padding:5px;
 }
 
-#sticky-bottom {
+.sticky-bottom {
 	padding:5px;
 }
 
@@ -105,25 +105,25 @@ textarea {
 	<div id="main">
 		{{with index .Chapters 0}}
 			{{range .Snippets}}
-				<div id="blank">
+				<div class="blank">
 				</div>
-				<div id="sticky">
-					<div id="sticky-top">
+				<div class="sticky">
+					<div class="sticky-top">
 						<textarea>{{.Orig}}</textarea>
 					</div>
-					<div id="sticky-bottom">
+					<div class="sticky-bottom">
 						<textarea>{{.Trans}}</textarea>
 					</div>
 				</div>
 			{{end}}
 		{{end}}
-		<div id="blank">
+		<div class="blank">
 		</div>
-		<div id="sticky-new">
-			<div id="sticky-top">
+		<div class="sticky-new">
+			<div class="sticky-top">
 				<textarea></textarea>
 			</div>
-			<div id="sticky-bottom">
+			<div class="sticky-bottom">
 				<textarea></textarea>
 			</div>
 		</div>
