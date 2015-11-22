@@ -38,6 +38,10 @@ $(document).ready(function() {
 	$(".button").on({
 		click:function() {
 			$(this).parent(".sticky-bar").css("display", "none");
+			$(this).parent().parent().find("textarea").each(function() {
+				var offset = this.offsetHeight - this.clientHeight;
+				$(this).css('height', 'auto').css('height', this.scrollHeight + offset);
+			});
 		}
 	});
 });
