@@ -22,8 +22,17 @@ $(document).ready(function() {
 		}
 	});
 
+	$("textarea").each(function() {
+		var offset = this.offsetHeight - this.clientHeight;
+		$(this).css('height', this.scrollHeight + offset);
+	});
+
 	$("textarea").bind("input propertychange", function() {
 		$(this).parent().parent().find(".sticky-bar").css("display", "block");
+		var offset = this.offsetHeight - this.clientHeight;
+		// TODO: $(this).css('height', 'auto') couldn't shirink textarea nicely,
+		// what's the alternatives? no plug-in.
+		$(this).css('height', this.scrollHeight + offset);
 	});
 
 	$(".button").on({
@@ -142,6 +151,8 @@ textarea {
 	border:none;
 	width:600px;
 	min-height:80px;
+	height:auto;
+	overflow-y:hidden;
 	resize:none;
 	cursor:inherit;
 }
