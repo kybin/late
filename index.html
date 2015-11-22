@@ -21,6 +21,16 @@ $(document).ready(function() {
 			});
 		}
 	});
+	$(".sticky").on({
+		focusin:function() {
+			console.log("hi?");
+			$(".sticky-bar", this).css("display", "block");
+		},
+		focusout:function() {
+			console.log("bye");
+			$(".sticky-bar", this).css("display", "none");
+		}
+	});
 });
 </script>
 
@@ -85,6 +95,14 @@ $(document).ready(function() {
 	padding:5px;
 }
 
+.sticky-bar {
+	height:50px;
+	border-style:inherit;
+	border-width:1px 0px 0px 0px;
+	background-color:#F0F0F0;
+	display:none;
+}
+
 textarea {
 	padding:5px;
 	border:none;
@@ -113,6 +131,8 @@ textarea {
 					</div>
 					<div class="sticky-bottom">
 						<textarea>{{.Trans}}</textarea>
+					</div>
+					<div class="sticky-bar">
 					</div>
 				</div>
 			{{end}}
