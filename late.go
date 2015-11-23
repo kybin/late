@@ -120,6 +120,9 @@ func main() {
 	fs := http.StripPrefix("/script/", http.FileServer(http.Dir("script/")))
 	http.Handle("/script/", fs)
 
+	fs = http.StripPrefix("/css/", http.FileServer(http.Dir("css/")))
+	http.Handle("/css/", fs)
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		testHandler(w, r, books[0])
 	})
