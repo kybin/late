@@ -9,14 +9,17 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$(".sticky-new").on({
+	$(".save").on({
 		click:function() {
+			var orig = $(this).parent().parent().find(".orig").val();
+			var trans = $(this).parent().parent().find(".trans").val();
 			$.ajax({
 				url: "/update",
 				data: {
-					test:"are you alright?"
+					orig:orig,
+					trans:trans,
 				},
-				success: function( data ) {
+				success: function() {
 					console.log("success");
 				}
 			});
@@ -62,14 +65,14 @@ $(document).ready(function() {
 				</div>
 				<div class="sticky">
 					<div class="sticky-top">
-						<textarea>{{.Orig}}</textarea>
+						<textarea class="orig">{{.Orig}}</textarea>
 					</div>
 					<div class="sticky-bottom">
-						<textarea>{{.Trans}}</textarea>
+						<textarea class="trans">{{.Trans}}</textarea>
 					</div>
 					<div class="sticky-bar">
-						<button class="button v-middle left red">Cancel</button>
-						<button class="button v-middle right blue">Save</button>
+						<button class="cancel button v-middle left red">Cancel</button>
+						<button class="save button v-middle right blue">Save</button>
 					</div>
 				</div>
 			{{end}}
@@ -78,10 +81,10 @@ $(document).ready(function() {
 		</div>
 		<div class="sticky-new">
 			<div class="sticky-top">
-				<textarea></textarea>
+				<textarea class="orig"></textarea>
 			</div>
 			<div class="sticky-bottom">
-				<textarea></textarea>
+				<textarea class="trans"></textarea>
 			</div>
 		</div>
 	</div>
