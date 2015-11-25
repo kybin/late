@@ -7,8 +7,30 @@
 <link rel="stylesheet" type="text/css" href="css/default.css">
 <script type="text/javascript" src="script/jquery.js"></script>
 
+<!-- learn from http://webcomponents.org/articles/introduction-to-html-imports/ -->
+<template id="snippet-new-template">
+	<div class="blank">
+	</div>
+	<div class="snippet-new" data-index="-1">
+		<div class="snippet-top">
+			<textarea class="orig"></textarea>
+		</div>
+		<div class="snippet-bottom">
+			<textarea class="trans"></textarea>
+		</div>
+		<div class="snippet-bar">
+			<button class="cancel button v-middle left red">Cancel</button>
+			<button class="save button v-middle right blue">Save</button>
+		</div>
+	</div>
+</template>
+
 <script type="text/javascript">
 $(document).ready(function() {
+	var newSnippet = document.querySelector("#snippet-new-template");
+	var newSnippetClone = document.importNode(newSnippet.content, true);
+	$("#main").append(newSnippetClone);
+
 	$(".save .button").on({
 		click:function() {
 			var path = $("#title").text() + "/" + "0" + "/" + $(this).parents(".snippet").data("index");
@@ -81,16 +103,6 @@ $(document).ready(function() {
 		</div>
 		{{end}}
 		{{end}}
-		<div class="blank">
-		</div>
-		<div class="snippet-new">
-			<div class="snippet-top">
-				<textarea class="orig"></textarea>
-			</div>
-			<div class="snippet-bottom">
-				<textarea class="trans"></textarea>
-			</div>
-		</div>
 	</div>
 </body>
 
