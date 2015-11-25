@@ -64,22 +64,22 @@ $(document).ready(function() {
 	</div>
 	<div id="main">
 		{{with index .Chapters 0}}
-			{{range $j, $v := .Snippets}}
-				<div class="blank">
-				</div>
-				<div class="sticky" data-index="{{$j}}">
-					<div class="sticky-top">
-						<textarea class="orig">{{.Orig}}</textarea>
-					</div>
-					<div class="sticky-bottom">
-						<textarea class="trans">{{.Trans}}</textarea>
-					</div>
-					<div class="sticky-bar">
-						<button class="cancel button v-middle left red">Cancel</button>
-						<button class="save button v-middle right blue">Save</button>
-					</div>
-				</div>
-			{{end}}
+		{{range $j, $v := .Snippets}}
+		<div class="blank">
+		</div>
+		<div class="sticky" data-index="{{$j}}">
+			<div class="sticky-top">
+				<textarea class="orig">{{.Orig}}</textarea>
+			</div>
+			<div class="sticky-bottom">
+				<textarea class="trans">{{.Trans}}</textarea>
+			</div>
+			<div class="sticky-bar">
+				<button class="cancel button v-middle left red">Cancel</button>
+				<button class="save button v-middle right blue">Save</button>
+			</div>
+		</div>
+		{{end}}
 		{{end}}
 		<div class="blank">
 		</div>
