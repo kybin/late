@@ -9,7 +9,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$(".save").on({
+	$(".save .button").on({
 		click:function() {
 			var path = $("#title").text() + "/" + "0" + "/" + $(this).parents(".sticky").data("index");
 			var orig = $(this).parent().parent().find(".orig").val();
