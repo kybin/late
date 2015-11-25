@@ -30,24 +30,40 @@ type snippet struct {
 	Trans string
 }
 
-func testHandler(w http.ResponseWriter, r *http.Request, bk book) {
+func rootHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	t, err := template.ParseFiles("index.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = t.Execute(w, bk)
+	books := scanRootDir()
+	err = t.Execute(w, books[0])
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func updateHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("hi")
-	log.Println(*r)
+	r.ParseForm()
+	// Why r.Form["x"] get in form with []string ?
+	if r.Form["type"][0] == "save" {
+		saveSnippet(r.Form["path"][0], r.Form["orig"][0], r.Form["trans"][0])
+	}
 }
 
-func main() {
+func saveSnippet(path, orig, trans string) {
+	err := ioutil.WriteFile("testroot/" + path + "/orig", []byte(orig), 0644)
+	if ( err != nil ) {
+		log.Fatal(err)
+	}
+	err = ioutil.WriteFile("testroot/" + path + "/trans", []byte(trans), 0644)
+	if ( err != nil ) {
+		log.Fatal(err)
+	}
+}
+
+// scanRootDir scan and return books in root dir with alphabetical order.
+func scanRootDir() []book {
 	root := "./testroot"
 	bookFiles, err := ioutil.ReadDir(root)
 	if err != nil {
@@ -115,6 +131,11 @@ func main() {
 		}
 		books = append(books, bk)
 	}
+	return books
+}
+
+func main() {
+
 	http.HandleFunc("/update", updateHandler)
 
 	fs := http.StripPrefix("/script/", http.FileServer(http.Dir("script/")))
@@ -124,7 +145,7 @@ func main() {
 	http.Handle("/css/", fs)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		testHandler(w, r, books[0])
+		rootHandler(w, r)
 	})
 	http.ListenAndServe(":8080", nil)
 }
