@@ -30,13 +30,13 @@
 	height:50px;
 }
 
-.sticky {
+.snippet {
 	border-style:solid;
 	border-width:3px;
 	border-radius:8px;
 }
 
-.sticky-new {
+.snippet-new {
 	cursor:pointer;
 	border-style:solid;
 	border-width:3px;
@@ -44,21 +44,21 @@
 	color:#C0C0C0;
 }
 
-.sticky-new:hover {
+.snippet-new:hover {
 	color:#848484;
 }
 
-.sticky-top {
+.snippet-top {
 	border-style:inherit;
 	border-width:0px 0px 1px 0px;
 	padding:5px;
 }
 
-.sticky-bottom {
+.snippet-bottom {
 	padding:5px;
 }
 
-.sticky-bar {
+.snippet-bar {
 	height:40px;
 	border-style:inherit;
 	border-width:1px 0px 0px 0px;

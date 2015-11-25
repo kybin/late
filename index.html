@@ -11,7 +11,7 @@
 $(document).ready(function() {
 	$(".save .button").on({
 		click:function() {
-			var path = $("#title").text() + "/" + "0" + "/" + $(this).parents(".sticky").data("index");
+			var path = $("#title").text() + "/" + "0" + "/" + $(this).parents(".snippet").data("index");
 			var orig = $(this).parent().parent().find(".orig").val();
 			var trans = $(this).parent().parent().find(".trans").val();
 			$.ajax({
@@ -36,7 +36,7 @@ $(document).ready(function() {
 	});
 
 	$("textarea").bind("input propertychange", function() {
-		$(this).parent().parent().find(".sticky-bar").css("display", "block");
+		$(this).parent().parent().find(".snippet-bar").css("display", "block");
 		var offset = this.offsetHeight - this.clientHeight;
 		// TODO: $(this).css('height', 'auto') couldn't shirink textarea nicely,
 		// what's the alternatives? no plug-in.
@@ -45,7 +45,7 @@ $(document).ready(function() {
 
 	$(".button").on({
 		click:function() {
-			$(this).parent(".sticky-bar").css("display", "none");
+			$(this).parent(".snippet-bar").css("display", "none");
 			$(this).parent().parent().find("textarea").each(function() {
 				var offset = this.offsetHeight - this.clientHeight;
 				$(this).css('height', 'auto').css('height', this.scrollHeight + offset);
@@ -67,14 +67,14 @@ $(document).ready(function() {
 		{{range $j, $v := .Snippets}}
 		<div class="blank">
 		</div>
-		<div class="sticky" data-index="{{$j}}">
-			<div class="sticky-top">
+		<div class="snippet" data-index="{{$j}}">
+			<div class="snippet-top">
 				<textarea class="orig">{{.Orig}}</textarea>
 			</div>
-			<div class="sticky-bottom">
+			<div class="snippet-bottom">
 				<textarea class="trans">{{.Trans}}</textarea>
 			</div>
-			<div class="sticky-bar">
+			<div class="snippet-bar">
 				<button class="cancel button v-middle left red">Cancel</button>
 				<button class="save button v-middle right blue">Save</button>
 			</div>
@@ -83,11 +83,11 @@ $(document).ready(function() {
 		{{end}}
 		<div class="blank">
 		</div>
-		<div class="sticky-new">
-			<div class="sticky-top">
+		<div class="snippet-new">
+			<div class="snippet-top">
 				<textarea class="orig"></textarea>
 			</div>
-			<div class="sticky-bottom">
+			<div class="snippet-bottom">
 				<textarea class="trans"></textarea>
 			</div>
 		</div>
