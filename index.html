@@ -57,7 +57,7 @@
 	var newSnippetClone = document.importNode(newSnippet.content, true);
 	$("#main").append(newSnippetClone);
 
-	$(".save .button").on({
+	$(".save").on({
 		click:function() {
 			var path = $("#title").text() + "/" + "0" + "/" + $(this).parents(".snippet").data("index");
 			var orig = $(this).parent().parent().find(".orig").val();
