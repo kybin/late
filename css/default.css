@@ -30,13 +30,7 @@
 	height:50px;
 }
 
-.snippet {
-	border-style:solid;
-	border-width:3px;
-	border-radius:8px;
-}
-
-.snippet-new {
+.new.snippet {
 	cursor:pointer;
 	border-style:solid;
 	border-width:3px;
@@ -44,8 +38,14 @@
 	color:#C0C0C0;
 }
 
-.snippet-new:hover {
+.new.snippet:hover {
 	color:#848484;
+}
+
+.snippet {
+	border-style:solid;
+	border-width:3px;
+	border-radius:8px;
 }
 
 .snippet-top {

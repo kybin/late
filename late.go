@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"log"
 	"io/ioutil"
 	"path/filepath"
@@ -43,23 +44,39 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func updateHandler(w http.ResponseWriter, r *http.Request) {
+func updateHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	r.ParseForm()
 	// Why r.Form["x"] get in form with []string ?
-	if r.Form["type"][0] == "save" {
-		saveSnippet(r.Form["path"][0], r.Form["orig"][0], r.Form["trans"][0])
+	typ := r.Form["type"][0]
+	subpath := r.Form["path"][0]
+	orig := r.Form["orig"][0]
+	trans := r.Form["trans"][0]
+	path := filepath.Join(rootpath, subpath)
+	switch typ {
+	case "save":
+		saveSnippet(path, orig, trans)
+	case "new":
+		newSnippet(path, orig, trans)
 	}
 }
 
 func saveSnippet(path, orig, trans string) {
-	err := ioutil.WriteFile("testroot/" + path + "/orig", []byte(orig), 0644)
+	err := ioutil.WriteFile(path + "/orig", []byte(orig), 0644)
 	if ( err != nil ) {
 		log.Fatal(err)
 	}
-	err = ioutil.WriteFile("testroot/" + path + "/trans", []byte(trans), 0644)
+	err = ioutil.WriteFile(path + "/trans", []byte(trans), 0644)
 	if ( err != nil ) {
 		log.Fatal(err)
 	}
+}
+
+func newSnippet(path, orig, trans string) {
+	err := os.MkdirAll(path, 0755)
+	if ( err != nil ) {
+		log.Fatal(err)
+	}
+	saveSnippet(path, orig, trans)
 }
 
 // scanRootDir scan and return books in root dir with alphabetical order.
@@ -135,8 +152,11 @@ func scanRootDir() []book {
 }
 
 func main() {
+	rootpath := "testroot"
 
-	http.HandleFunc("/update", updateHandler)
+	http.HandleFunc("/update", func(w http.ResponseWriter, r *http.Request) {
+		updateHandler(w, r, rootpath)
+	})
 
 	fs := http.StripPrefix("/script/", http.FileServer(http.Dir("script/")))
 	http.Handle("/script/", fs)

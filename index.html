@@ -38,7 +38,7 @@
 <template id="snippet-new-template">
 	<div class="blank">
 	</div>
-	<div class="snippet-new" data-index="-1">
+	<div class="new snippet" data-index="-1">
 		<div class="snippet-top">
 			<textarea class="orig"></textarea>
 		</div>
@@ -53,25 +53,46 @@
 </template>
 
 <script type="text/javascript">
-	var newSnippet = document.querySelector("#snippet-new-template");
-	var newSnippetClone = document.importNode(newSnippet.content, true);
-	$("#main").append(newSnippetClone);
+	function addNewSnippet() {
+		var newSnippet = document.querySelector("#snippet-new-template");
+		var newSnippetClone = document.importNode(newSnippet.content, true);
+		$("#main").append(newSnippetClone);
+	}
+	// when document is loaded, there are only exist snippets.
+	// we need a new snippet div in case of user want add one.
+	addNewSnippet();
 
 	$(".save").on({
 		click:function() {
-			var path = $("#title").text() + "/" + "0" + "/" + $(this).parents(".snippet").data("index");
+			$snippet = $(this).parents(".snippet");
+
+			// because of the [blank, snippet, blank, snippet...] order,
+			// index 1, 3, 5.. should mapped to 0, 1, 2..
+			var idx = ($snippet.index() - 1) / 2;
+			var type = "save";
+			if ($snippet.hasClass("new")) {
+				type = "new";
+			}
+
+			var path = $("#title").text() + "/" + "0" + "/" + idx;
 			var orig = $(this).parent().parent().find(".orig").val();
 			var trans = $(this).parent().parent().find(".trans").val();
 			$.ajax({
 				url: "/update",
 				data: {
-					type:"save",
+					type:type,
 					content:"snippet",
 					path:path,
 					orig:orig,
 					trans:trans,
 				},
 				success: function() {
+					if (type == "new") {
+						$snippet.removeClass("new");
+					}
+					// new snippet div should be added right after
+					// the old one is disappeared.
+					addNewSnippet();
 					console.log("success");
 				}
 			});
