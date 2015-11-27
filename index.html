@@ -72,17 +72,18 @@
 		click:function() {
 			$snippet = $(this).parents(".snippet");
 
-			// because of the [blank, snippet, blank, snippet...] order,
+			// because of the [blank, snippet-block, blank, snippet-block...] order,
 			// index 1, 3, 5.. should mapped to 0, 1, 2..
-			var idx = ($snippet.index() - 1) / 2;
+			var idx = ($snippet.parent().index() - 1) / 2;
+
 			var type = "save";
 			if ($snippet.hasClass("new")) {
 				type = "new";
 			}
 
 			var path = $("#title").text() + "/" + "0" + "/" + idx;
-			var orig = $(this).parent().parent().find(".orig").val();
-			var trans = $(this).parent().parent().find(".trans").val();
+			var orig = $snippet.find(".orig").val();
+			var trans = $snippet.find(".trans").val();
 			$.ajax({
 				url: "/update",
 				data: {
