@@ -15,10 +15,10 @@
 </div>
 <div id="main">
 	{{with index .Chapters 0}}
-	{{range $j, $v := .Snippets}}
+	{{range .Snippets}}
 	<div class="blank">
 	</div>
-	<div class="snippet" data-index="{{$j}}">
+	<div class="snippet">
 		<div class="snippet-top">
 			<textarea class="orig">{{.Orig}}</textarea>
 		</div>
@@ -38,7 +38,7 @@
 <template id="snippet-new-template">
 	<div class="blank">
 	</div>
-	<div class="new snippet" data-index="-1">
+	<div class="new snippet">
 		<div class="snippet-top">
 			<textarea class="orig"></textarea>
 		</div>
