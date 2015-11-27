@@ -18,17 +18,20 @@
 	{{range .Snippets}}
 	<div class="blank">
 	</div>
-	<div class="snippet">
-		<div class="snippet-top">
-			<textarea class="orig">{{.Orig}}</textarea>
+	<div class="snippet-block">
+		<div class="snippet" style="width:610px;display:inline-block;">
+			<div class="snippet-top">
+				<textarea class="orig">{{.Orig}}</textarea>
+			</div>
+			<div class="snippet-bottom">
+				<textarea class="trans">{{.Trans}}</textarea>
+			</div>
+			<div class="snippet-bar">
+				<button class="cancel button v-middle left red">Cancel</button>
+				<button class="save button v-middle right blue">Save</button>
+			</div>
 		</div>
-		<div class="snippet-bottom">
-			<textarea class="trans">{{.Trans}}</textarea>
-		</div>
-		<div class="snippet-bar">
-			<button class="cancel button v-middle left red">Cancel</button>
-			<button class="save button v-middle right blue">Save</button>
-		</div>
+		<button style="display:inline-block;vertical-align:top;" class="red delete button">-</button>
 	</div>
 	{{end}}
 	{{end}}
@@ -38,17 +41,20 @@
 <template id="snippet-new-template">
 	<div class="blank">
 	</div>
-	<div class="new snippet">
-		<div class="snippet-top">
-			<textarea class="orig"></textarea>
+	<div class="snippet-block":>
+		<div class="new snippet" style="width:610px;display:inline-block;">
+			<div class="snippet-top">
+				<textarea class="orig"></textarea>
+			</div>
+			<div class="snippet-bottom">
+				<textarea class="trans"></textarea>
+			</div>
+			<div class="snippet-bar">
+				<button class="cancel button v-middle left red">Cancel</button>
+				<button class="save button v-middle right blue">Save</button>
+			</div>
 		</div>
-		<div class="snippet-bottom">
-			<textarea class="trans"></textarea>
-		</div>
-		<div class="snippet-bar">
-			<button class="cancel button v-middle left red">Cancel</button>
-			<button class="save button v-middle right blue">Save</button>
-		</div>
+		<button style="display:inline-block;vertical-align:top;visibility:hidden" class="red delete button">-</button>
 	</div>
 </template>
 
@@ -89,6 +95,7 @@
 				success: function() {
 					if (type == "new") {
 						$snippet.removeClass("new");
+						$snippet.parent().find(".delete.button").css("visibility", "visible");
 					}
 					// new snippet div should be added right after
 					// the old one is disappeared.

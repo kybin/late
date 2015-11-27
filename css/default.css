@@ -26,7 +26,6 @@
 }
 
 .blank {
-	width:600px;
 	height:50px;
 }
 
@@ -65,6 +64,20 @@
 	background-color:#F0F0F0;
 	display:none;
 	padding:3px 10px;
+}
+
+.delete.button {
+	width:20px;
+	height:20px;
+	border-radius:3px;
+	border-width:1px;
+	text-align:center;
+	background-color:white;
+	color:black;
+}
+
+.delete.button:hover {
+	background-color:#ff704d;
 }
 
 .button {
