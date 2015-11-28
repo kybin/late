@@ -66,7 +66,7 @@
 	padding:3px 10px;
 }
 
-.delete.button {
+.remove.button {
 	width:20px;
 	height:20px;
 	border-radius:3px;
@@ -76,7 +76,7 @@
 	color:black;
 }
 
-.delete.button:hover {
+.remove.button:hover {
 	background-color:#ff704d;
 }
 

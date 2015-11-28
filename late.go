@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"strconv"
 	"net/http"
+	"sort"
 )
 
 // directory struct: {root}/{book title}/{chapter num}/{block num}
@@ -31,6 +32,32 @@ type snippet struct {
 	Trans string
 }
 
+func chapterDir(path string) string {
+	return filepath.Base(filepath.Dir(path))
+}
+
+func chapterIndex(path string) int {
+	d := chapterDir(path)
+	i, err := strconv.Atoi(d)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return i
+}
+
+func snippetDir(path string) string {
+	return filepath.Base(path)
+}
+
+func snippetIndex(path string) int {
+	d := snippetDir(path)
+	i, err := strconv.Atoi(d)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return i
+}
+
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	t, err := template.ParseFiles("index.html")
@@ -49,34 +76,104 @@ func updateHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	// Why r.Form["x"] get in form with []string ?
 	typ := r.Form["type"][0]
 	subpath := r.Form["path"][0]
-	orig := r.Form["orig"][0]
-	trans := r.Form["trans"][0]
 	path := filepath.Join(rootpath, subpath)
 	switch typ {
 	case "save":
+		orig := r.Form["orig"][0]
+		trans := r.Form["trans"][0]
 		saveSnippet(path, orig, trans)
 	case "new":
+		orig := r.Form["orig"][0]
+		trans := r.Form["trans"][0]
 		newSnippet(path, orig, trans)
+	case "remove":
+		removeSnippet(path)
 	}
 }
 
 func saveSnippet(path, orig, trans string) {
 	err := ioutil.WriteFile(path + "/orig", []byte(orig), 0644)
-	if ( err != nil ) {
+	if err != nil {
 		log.Fatal(err)
 	}
 	err = ioutil.WriteFile(path + "/trans", []byte(trans), 0644)
-	if ( err != nil ) {
+	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func newSnippet(path, orig, trans string) {
 	err := os.MkdirAll(path, 0755)
-	if ( err != nil ) {
+	if err != nil {
 		log.Fatal(err)
 	}
 	saveSnippet(path, orig, trans)
+}
+
+func removeSnippet(path string) {
+	err := os.Remove(filepath.Join(path, "orig"));
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.Remove(filepath.Join(path, "trans"));
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.Remove(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// after remove the snippet dir, the later dirs should renamed to fill hole.
+	// if 2 is removed. 3 -> 2, 4 -> 3
+	chapd, snipd := filepath.Split(path)
+	rmIndex, err := strconv.Atoi(snipd)
+	if err != nil {
+		log.Fatal(err)
+	}
+	files, err := ioutil.ReadDir(chapd)
+	if err != nil {
+		log.Fatal(err)
+	}
+	sort.Sort(byIndex(files))
+	for _, f := range files {
+		if !f.IsDir() {
+			log.Fatal("chapter directory should only have snippet directories. file found")
+		}
+		i, err := strconv.Atoi(f.Name())
+		if err != nil {
+			log.Fatal(err)
+		}
+		if i <= rmIndex {
+			continue
+		}
+		newName := strconv.Itoa(i-1)
+		err = os.Rename(filepath.Join(chapd, f.Name()), filepath.Join(chapd, newName))
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+type byIndex []os.FileInfo
+
+func (b byIndex) Len() int {
+	return len(b)
+}
+
+func (b byIndex) Swap(i, j int) {
+	b[i], b[j] = b[j], b[i]
+}
+
+func (b byIndex) Less(i, j int) bool {
+	return atoi(b[i].Name()) < atoi(b[j].Name())
+}
+
+func atoi(s string) int {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return i
 }
 
 // scanRootDir scan and return books in root dir with alphabetical order.
