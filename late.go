@@ -32,32 +32,6 @@ type snippet struct {
 	Trans string
 }
 
-func chapterDir(path string) string {
-	return filepath.Base(filepath.Dir(path))
-}
-
-func chapterIndex(path string) int {
-	d := chapterDir(path)
-	i, err := strconv.Atoi(d)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return i
-}
-
-func snippetDir(path string) string {
-	return filepath.Base(path)
-}
-
-func snippetIndex(path string) int {
-	d := snippetDir(path)
-	i, err := strconv.Atoi(d)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return i
-}
-
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	t, err := template.ParseFiles("index.html")
