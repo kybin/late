@@ -38,7 +38,7 @@
 </div>
 
 <!-- learn from http://webcomponents.org/articles/introduction-to-html-imports/ -->
-<template id="snippet-new-template">
+<template id="new-snippet-template">
 	<div class="snippet-block">
 		<div class="blank">
 		</div>
@@ -60,7 +60,7 @@
 
 <script type="text/javascript">
 	function addNewSnippet() {
-		var newSnippet = document.querySelector("#snippet-new-template");
+		var newSnippet = document.querySelector("#new-snippet-template");
 		var newSnippetClone = document.importNode(newSnippet.content, true);
 		$("#main").append(newSnippetClone);
 	}
