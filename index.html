@@ -18,6 +18,11 @@
 	{{range .Snippets}}
 	<div class="snippet-block">
 		<div class="blank">
+			<button class="insert button">
+				<span> <!-- why this exist? see http://stackoverflow.com/questions/4929310/why-isnt-css-visibility-working -->
+					<hr class="insert line">
+				</span>
+			</button>
 		</div>
 		<div class="snippet" style="width:610px;display:inline-block;">
 			<div class="snippet-top">
@@ -27,8 +32,8 @@
 				<textarea class="trans">{{.Trans}}</textarea>
 			</div>
 			<div class="snippet-bar">
-				<button class="cancel button v-middle left red">Cancel</button>
-				<button class="save button v-middle right blue">Save</button>
+				<button class="cancel button v-middle left red" style="width:80px;height:30px;">Cancel</button>
+				<button class="save button v-middle right blue" style="width:80px;height:30px;">Save</button>
 			</div>
 		</div>
 		<button style="display:inline-block;vertical-align:top;" class="red remove button">-</button>
