@@ -17,13 +17,11 @@
 	{{with index .Chapters 0}}
 	{{range .Snippets}}
 	<div class="snippet-block">
-		<div class="blank">
-			<button class="insert button">
-				<span> <!-- why this exist? see http://stackoverflow.com/questions/4929310/why-isnt-css-visibility-working -->
-					<hr class="insert line">
-				</span>
-			</button>
-		</div>
+		<button class="insert button">
+			<span> <!-- why this exist? see http://stackoverflow.com/questions/4929310/why-isnt-css-visibility-working -->
+				<hr class="insert line">
+			</span>
+		</button>
 		<div class="snippet" style="width:610px;display:inline-block;">
 			<div class="snippet-top">
 				<textarea class="orig">{{.Orig}}</textarea>
@@ -45,8 +43,11 @@
 <!-- learn from http://webcomponents.org/articles/introduction-to-html-imports/ -->
 <template id="new-snippet-template">
 	<div class="snippet-block">
-		<div class="blank">
-		</div>
+		<button class="insert button">
+			<span> <!-- why this exist? see http://stackoverflow.com/questions/4929310/why-isnt-css-visibility-working -->
+				<hr class="insert line">
+			</span>
+		</button>
 		<div class="new snippet" style="width:610px;display:inline-block;">
 			<div class="snippet-top">
 				<textarea class="orig"></textarea>
