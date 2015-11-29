@@ -64,7 +64,32 @@
 	</div>
 </template>
 
+<template id="snippet-template">
+	<div class="snippet-block">
+		<button class="insert button">
+			<span>
+				<hr class="insert line">
+			</span>
+		</button>
+		<div class="snippet" style="width:610px;display:inline-block;">
+			<div class="snippet-top">
+				<textarea class="orig"></textarea>
+			</div>
+			<div class="snippet-bottom">
+				<textarea class="trans"></textarea>
+			</div>
+			<div class="snippet-bar">
+				<button class="cancel button v-middle left red">Cancel</button>
+				<button class="save button v-middle right blue">Save</button>
+			</div>
+		</div>
+		<button style="display:inline-block;vertical-align:top" class="red remove button">-</button>
+	</div>
+</template>
+
 <script type="text/javascript">
+	// addNewSnippet will executed initializing time
+	// and when called from save button.
 	function addNewSnippet() {
 		var newSnippet = document.querySelector("#new-snippet-template");
 		var newSnippetClone = document.importNode(newSnippet.content, true);
@@ -74,72 +99,100 @@
 	// we need a new snippet div in case of user want add one.
 	addNewSnippet();
 
-	$(".save").on({
-		click:function() {
-			$block = $(this).parents(".snippet-block");
-			$snippet = $block.find(".snippet");
+	// insertNewSnippet insert snippet-template when called from insert button.
+	function insertNewSnippet(idx) {
+		var newSnippet = document.querySelector("#snippet-template");
+		var newSnippetClone = document.importNode(newSnippet.content, true);
+		$(newSnippetClone).insertBefore($("#main").find(".snippet-block").eq(idx));
+	}
 
-			var idx = $block.index();
-			if ( idx == -1 ) {
-				console.log("wrong snippet-block index");
-				return;
-			}
+	$(document).on("click", ".save", function() {
+		$block = $(this).parents(".snippet-block");
+		$snippet = $block.find(".snippet");
 
-			var url = "/save";
-			if ($snippet.hasClass("new")) {
-				url = "/new";
-			}
-			var path = $("#title").text() + "/" + "0" + "/" + idx;
-			var orig = $snippet.find(".orig").val();
-			var trans = $snippet.find(".trans").val();
-
-			$.ajax({
-				url: url,
-				data: {
-					content:"snippet",
-					path:path,
-					orig:orig,
-					trans:trans,
-				},
-				success: function() {
-					if ($snippet.hasClass("new")) {
-						$snippet.removeClass("new");
-						$block.find(".remove.button").css("visibility", "visible");
-					}
-					// new snippet div should be added right after
-					// the old one is disappeared.
-					addNewSnippet();
-					console.log("success");
-				}
-			});
+		var idx = $block.index();
+		if ( idx == -1 ) {
+			console.log("wrong snippet-block index");
+			return;
 		}
+
+		var url = "/save";
+		if ($snippet.hasClass("new")) {
+			url = "/new";
+		}
+		var path = $("#title").text() + "/" + "0" + "/" + idx;
+		var orig = $snippet.find(".orig").val();
+		var trans = $snippet.find(".trans").val();
+
+		$.ajax({
+			url: url,
+			data: {
+				content:"snippet",
+				path:path,
+				orig:orig,
+				trans:trans,
+			},
+			success: function() {
+				if ($snippet.hasClass("new")) {
+					$snippet.removeClass("new");
+					$block.find(".remove.button").css("visibility", "visible");
+				}
+				// new snippet div should be added right after
+				// the old one is disappeared.
+				addNewSnippet();
+				console.log("success");
+			}
+		});
 	});
 
-	$(".remove").on({
-		click:function() {
-			$block = $(this).parents(".snippet-block");
-			$snippet = $block.find(".snippet");
+	$(document).on("click", ".insert", function() {
+		$block = $(this).parents(".snippet-block");
+		$snippet = $block.find(".snippet");
 
-			var idx = $block.index();
-			if ( idx == -1 ) {
-				console.log("wrong snippet-block index");
-				return;
-			}
-
-			var path = $("#title").text() + "/" + "0" + "/" + idx;
-
-			$.ajax({
-				url: "/remove",
-				data: {
-					content:"snippet",
-					path:path,
-				},
-				success: function() {
-					$block.remove();
-					console.log("success");
-				}
-			});
+		var idx = $block.index();
+		if ( idx == -1 ) {
+			console.log("wrong snippet-block index");
+			return;
 		}
+
+		var path = $("#title").text() + "/" + "0" + "/" + idx;
+
+		$.ajax({
+			url: "/insert",
+			data: {
+				content:"snippet",
+				path:path,
+			},
+			success: function() {
+				insertNewSnippet(idx);
+				console.log("success");
+			}
+		});
+	});
+
+	$(document).on("click", ".remove", function() {
+		$block = $(this).parents(".snippet-block");
+		$snippet = $block.find(".snippet");
+
+		var idx = $block.index();
+		if ( idx == -1 ) {
+			console.log("wrong snippet-block index");
+			return;
+		}
+
+		var path = $("#title").text() + "/" + "0" + "/" + idx;
+
+		$.ajax({
+			url: "/remove",
+			data: {
+				content:"snippet",
+				path:path,
+			},
+			success: function() {
+				$block.remove();
+				console.log("success");
+			}
+		});
 	});
 
 	$("textarea").each(function() {
