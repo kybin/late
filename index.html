@@ -79,25 +79,24 @@
 				return;
 			}
 
-			var type = "save";
+			var url = "/save";
 			if ($snippet.hasClass("new")) {
-				type = "new";
+				url = "/new";
 			}
-
 			var path = $("#title").text() + "/" + "0" + "/" + idx;
 			var orig = $snippet.find(".orig").val();
 			var trans = $snippet.find(".trans").val();
+
 			$.ajax({
-				url: "/update",
+				url: url,
 				data: {
-					type:type,
 					content:"snippet",
 					path:path,
 					orig:orig,
 					trans:trans,
 				},
 				success: function() {
-					if (type == "new") {
+					if ($snippet.hasClass("new")) {
 						$snippet.removeClass("new");
 						$block.find(".remove.button").css("visibility", "visible");
 					}
@@ -124,9 +123,8 @@
 			var path = $("#title").text() + "/" + "0" + "/" + idx;
 
 			$.ajax({
-				url: "/update",
+				url: "/remove",
 				data: {
-					type:"remove",
 					content:"snippet",
 					path:path,
 				},

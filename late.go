@@ -45,24 +45,13 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func updateHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+func saveHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	r.ParseForm()
-	// Why r.Form["x"] get in form with []string ?
-	typ := r.Form["type"][0]
 	subpath := r.Form["path"][0]
 	path := filepath.Join(rootpath, subpath)
-	switch typ {
-	case "save":
-		orig := r.Form["orig"][0]
-		trans := r.Form["trans"][0]
-		saveSnippet(path, orig, trans)
-	case "new":
-		orig := r.Form["orig"][0]
-		trans := r.Form["trans"][0]
-		newSnippet(path, orig, trans)
-	case "remove":
-		removeSnippet(path)
-	}
+	orig := r.Form["orig"][0]
+	trans := r.Form["trans"][0]
+	saveSnippet(path, orig, trans)
 }
 
 func saveSnippet(path, orig, trans string) {
@@ -76,12 +65,28 @@ func saveSnippet(path, orig, trans string) {
 	}
 }
 
+func newHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+	r.ParseForm()
+	subpath := r.Form["path"][0]
+	path := filepath.Join(rootpath, subpath)
+	orig := r.Form["orig"][0]
+	trans := r.Form["trans"][0]
+	newSnippet(path, orig, trans)
+}
+
 func newSnippet(path, orig, trans string) {
 	err := os.MkdirAll(path, 0755)
 	if err != nil {
 		log.Fatal(err)
 	}
 	saveSnippet(path, orig, trans)
+}
+
+func removeHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+	r.ParseForm()
+	subpath := r.Form["path"][0]
+	path := filepath.Join(rootpath, subpath)
+	removeSnippet(path)
 }
 
 func removeSnippet(path string) {
@@ -225,15 +230,18 @@ func scanRootDir() []book {
 func main() {
 	rootpath := "testroot"
 
-	http.HandleFunc("/update", func(w http.ResponseWriter, r *http.Request) {
-		updateHandler(w, r, rootpath)
+	http.HandleFunc("/save", func(w http.ResponseWriter, r *http.Request) {
+		saveHandler(w, r, rootpath)
+	})
+	http.HandleFunc("/new", func(w http.ResponseWriter, r *http.Request) {
+		newHandler(w, r, rootpath)
+	})
+	http.HandleFunc("/remove", func(w http.ResponseWriter, r *http.Request) {
+		removeHandler(w, r, rootpath)
 	})
 
-	fs := http.StripPrefix("/script/", http.FileServer(http.Dir("script/")))
-	http.Handle("/script/", fs)
-
-	fs = http.StripPrefix("/css/", http.FileServer(http.Dir("css/")))
-	http.Handle("/css/", fs)
+	http.Handle("/script/", http.StripPrefix("/script/", http.FileServer(http.Dir("script/"))))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		rootHandler(w, r)
