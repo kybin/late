@@ -56,8 +56,8 @@
 				<textarea class="trans"></textarea>
 			</div>
 			<div class="snippet-bar">
-				<button class="cancel button v-middle left red">Cancel</button>
-				<button class="save button v-middle right blue">Save</button>
+				<button class="cancel button v-middle left red" style="width:80px;height:30px;">Cancel</button>
+				<button class="save button v-middle right blue" style="width:80px;height:30px;">Save</button>
 			</div>
 		</div>
 		<button style="display:inline-block;vertical-align:top;visibility:hidden" class="red remove button">-</button>
@@ -79,8 +79,8 @@
 				<textarea class="trans"></textarea>
 			</div>
 			<div class="snippet-bar">
-				<button class="cancel button v-middle left red">Cancel</button>
-				<button class="save button v-middle right blue">Save</button>
+				<button class="cancel button v-middle left red" style="width:80px;height:30px;">Cancel</button>
+				<button class="save button v-middle right blue" style="width:80px;height:30px;">Save</button>
 			</div>
 		</div>
 		<button style="display:inline-block;vertical-align:top" class="red remove button">-</button>
@@ -200,22 +200,20 @@
 		$(this).css('height', this.scrollHeight + offset);
 	});
 
-	$("textarea").bind("input propertychange", function() {
-		$(this).parent().parent().find(".snippet-bar").css("display", "block");
+	$(document).on("input propertychange", "textarea", function() {
+		$(this).parents(".snippet").find(".snippet-bar").css("display", "block");
 		var offset = this.offsetHeight - this.clientHeight;
 		// TODO: $(this).css('height', 'auto') couldn't shirink textarea nicely,
 		// what's the alternatives? no plug-in.
 		$(this).css('height', this.scrollHeight + offset);
 	});
 
-	$(".button").on({
-		click:function() {
-			$(this).parent(".snippet-bar").css("display", "none");
-			$(this).parent().parent().find("textarea").each(function() {
-				var offset = this.offsetHeight - this.clientHeight;
-				$(this).css('height', 'auto').css('height', this.scrollHeight + offset);
-			});
-		}
+	$(document).on("click", ".button", function() {
+		$(this).parent(".snippet-bar").css("display", "none");
+		$(this).parent().parent().find("textarea").each(function() {
+			var offset = this.offsetHeight - this.clientHeight;
+			$(this).css('height', 'auto').css('height', this.scrollHeight + offset);
+		});
 	});
 </script>
 
