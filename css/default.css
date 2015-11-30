@@ -1,8 +1,8 @@
 #title {
 	text-align:center;
 	font-size:30px;
-	height:70px;
-	line-height:70px;
+	height:50px;
+	line-height:50px;
 }
 
 #tab-selector {
@@ -27,7 +27,6 @@
 
 .blank {
 	position:relative;
-	height:50px;
 }
 
 .new.snippet {
@@ -43,10 +42,11 @@
 }
 
 .snippet-block {
-	width:650px;
+	width:800px;
 }
 
 .snippet {
+	width:770px;
 	border-style:solid;
 	border-width:3px;
 	border-radius:8px;
@@ -88,7 +88,7 @@
 .insert.button {
 	position:relative;
 	width:100%;
-	height:50px;
+	height:40px;
 	background-color:transparent;
 	border-color:transparent;
 }
@@ -102,10 +102,11 @@
 }
 
 .insert.line {
-	width:300px;
+	width:400px;
 	height:0px;
-	border-width:1px 0px 0px 0px;
+	border-width:2px 0px 0px 0px;
 	border-style:dashed;
+	border-color:red;
 	visibility:inherit;
 }
 
@@ -141,12 +142,13 @@
 }
 
 textarea {
-	padding:5px;
+	padding:5px 8px 12px 8px;
 	border:none;
-	width:600px;
+	width:765px;
 	min-height:80px;
 	height:auto;
 	overflow-y:hidden;
 	resize:none;
 	cursor:inherit;
+	font-size:22;
 }
