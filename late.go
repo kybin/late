@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"net/http"
 	"sort"
+	"fmt"
 )
 
 // directory struct: {root}/{book title}/{chapter num}/{block num}
@@ -301,5 +302,9 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		rootHandler(w, r)
 	})
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	if ( err != nil ) {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 }
