@@ -82,6 +82,58 @@ func newSnippet(path, orig, trans string) {
 	saveSnippet(path, orig, trans)
 }
 
+func insertHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+	r.ParseForm()
+	subpath := r.Form["path"][0]
+	path := filepath.Join(rootpath, subpath)
+	insertSnippet(path)
+}
+
+func insertSnippet(path string) {
+	// before insert the snippet dir, the later dirs should shifted by 1.
+	// if 2 is inserted. n -> n + 1 ... 3 -> 3, 2 -> 3.
+	chapd, snipd := filepath.Split(path)
+	insertIndex, err := strconv.Atoi(snipd)
+	if err != nil {
+		log.Fatal(err)
+	}
+	files, err := ioutil.ReadDir(chapd)
+	if err != nil {
+		log.Fatal(err)
+	}
+	sort.Sort(sort.Reverse(byIndex(files)))
+	for _, f := range files {
+		if !f.IsDir() {
+			log.Fatal("chapter directory should only have snippet directories. file found")
+		}
+		i, err := strconv.Atoi(f.Name())
+		if err != nil {
+			log.Fatal(err)
+		}
+		if i < insertIndex {
+			break
+		}
+		newName := strconv.Itoa(i+1)
+		err = os.Rename(filepath.Join(chapd, f.Name()), filepath.Join(chapd, newName))
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	err = os.MkdirAll(path, 0755)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = ioutil.WriteFile(path + "/orig", []byte(""), 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = ioutil.WriteFile(path + "/trans", []byte(""), 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func removeHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	r.ParseForm()
 	subpath := r.Form["path"][0]
@@ -235,6 +287,9 @@ func main() {
 	})
 	http.HandleFunc("/new", func(w http.ResponseWriter, r *http.Request) {
 		newHandler(w, r, rootpath)
+	})
+	http.HandleFunc("/insert", func(w http.ResponseWriter, r *http.Request) {
+		insertHandler(w, r, rootpath)
 	})
 	http.HandleFunc("/remove", func(w http.ResponseWriter, r *http.Request) {
 		removeHandler(w, r, rootpath)
