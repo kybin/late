@@ -41,29 +41,6 @@
 </div>
 
 <!-- learn from http://webcomponents.org/articles/introduction-to-html-imports/ -->
-<template id="new-snippet-template">
-	<div class="snippet-block">
-		<button class="insert button">
-			<span> <!-- why this exist? see http://stackoverflow.com/questions/4929310/why-isnt-css-visibility-working -->
-				<hr class="insert line">
-			</span>
-		</button>
-		<div class="new snippet" style="width:610px;display:inline-block;">
-			<div class="snippet-top">
-				<textarea class="orig"></textarea>
-			</div>
-			<div class="snippet-bottom">
-				<textarea class="trans"></textarea>
-			</div>
-			<div class="snippet-bar">
-				<button class="cancel button v-middle left red" style="width:80px;height:30px;">Cancel</button>
-				<button class="save button v-middle right blue" style="width:80px;height:30px;">Save</button>
-			</div>
-		</div>
-		<button style="display:inline-block;vertical-align:top;visibility:hidden" class="red remove button">-</button>
-	</div>
-</template>
-
 <template id="snippet-template">
 	<div class="snippet-block">
 		<button class="insert button">
@@ -87,17 +64,25 @@
 	</div>
 </template>
 
+<!--
+"last snippet-block" is kind of fake snippet-block.
+it doesn't have textarea for editing and live end of #main div.
+use if for insert real last-snippet.
+-->
+<template id="last-snippet-template">
+	<div class="last snippet-block">
+		<button class="insert button">
+			<span>
+				<hr class="insert line">
+			</span>
+		</button>
+	</div>
+</template>
+
 <script type="text/javascript">
-	// addNewSnippet will executed initializing time
-	// and when called from save button.
-	function addNewSnippet() {
-		var newSnippet = document.querySelector("#new-snippet-template");
-		var newSnippetClone = document.importNode(newSnippet.content, true);
-		$("#main").append(newSnippetClone);
-	}
-	// when document is loaded, there are only exist snippets.
-	// we need a new snippet div in case of user want add one.
-	addNewSnippet();
+	var lastSnippet = document.querySelector("#last-snippet-template");
+	var lastSnippetClone = document.importNode(lastSnippet.content, true);
+	$("#main").append(lastSnippetClone);
 
 	// insertNewSnippet insert snippet-template when called from insert button.
 	function insertNewSnippet(idx) {
@@ -116,16 +101,12 @@
 			return;
 		}
 
-		var url = "/save";
-		if ($snippet.hasClass("new")) {
-			url = "/new";
-		}
 		var path = $("#title").text() + "/" + "0" + "/" + idx;
 		var orig = $snippet.find(".orig").val();
 		var trans = $snippet.find(".trans").val();
 
 		$.ajax({
-			url: url,
+			url: "/save",
 			data: {
 				content:"snippet",
 				path:path,
@@ -133,13 +114,6 @@
 				trans:trans,
 			},
 			success: function() {
-				if ($snippet.hasClass("new")) {
-					$snippet.removeClass("new");
-					$block.find(".remove.button").css("visibility", "visible");
-				}
-				// new snippet div should be added right after
-				// the old one is disappeared.
-				addNewSnippet();
 				console.log("success");
 			}
 		});

@@ -66,23 +66,6 @@ func saveSnippet(path, orig, trans string) {
 	}
 }
 
-func newHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
-	r.ParseForm()
-	subpath := r.Form["path"][0]
-	path := filepath.Join(rootpath, subpath)
-	orig := r.Form["orig"][0]
-	trans := r.Form["trans"][0]
-	newSnippet(path, orig, trans)
-}
-
-func newSnippet(path, orig, trans string) {
-	err := os.MkdirAll(path, 0755)
-	if err != nil {
-		log.Fatal(err)
-	}
-	saveSnippet(path, orig, trans)
-}
-
 func insertHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	r.ParseForm()
 	subpath := r.Form["path"][0]
@@ -285,9 +268,6 @@ func main() {
 
 	http.HandleFunc("/save", func(w http.ResponseWriter, r *http.Request) {
 		saveHandler(w, r, rootpath)
-	})
-	http.HandleFunc("/new", func(w http.ResponseWriter, r *http.Request) {
-		newHandler(w, r, rootpath)
 	})
 	http.HandleFunc("/insert", func(w http.ResponseWriter, r *http.Request) {
 		insertHandler(w, r, rootpath)
