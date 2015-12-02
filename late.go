@@ -35,12 +35,8 @@ type snippet struct {
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	t, err := template.ParseFiles("index.html")
-	if err != nil {
-		log.Fatal(err)
-	}
 	books := scanRootDir()
-	err = t.Execute(w, books[0])
+	err := indexTemplate.Execute(w, books[0])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -261,6 +257,12 @@ func scanRootDir() []book {
 		books = append(books, bk)
 	}
 	return books
+}
+
+var indexTemplate *template.Template
+
+func init() {
+	indexTemplate = template.Must(template.ParseFiles("index.html"))
 }
 
 func main() {
