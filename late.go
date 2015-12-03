@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"sort"
 	"fmt"
+	"strings"
 )
 
 // directory struct: {root}/{book title}/{chapter num}/{block num}
@@ -37,6 +38,32 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	books := scanRootDir()
 	err := indexTemplate.Execute(w, books[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func docHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+
+	paths := strings.Split(r.URL.Path, "/")
+	title := paths[len(paths)-1]
+
+	findIdx := -1
+	books := scanRootDir()
+	for i, b := range books {
+		if b.Title == title {
+			findIdx = i
+			break
+		}
+	}
+
+	if findIdx == -1 {
+		fmt.Fprintf(w, "not found the page")
+		return
+	}
+
+	err := docTemplate.Execute(w, books[findIdx])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -259,15 +286,28 @@ func scanRootDir() []book {
 	return books
 }
 
-var indexTemplate *template.Template
+var (
+	indexTemplate *template.Template
+	docTemplate *template.Template
+)
 
 func init() {
 	indexTemplate = template.Must(template.ParseFiles("index.html"))
+	docTemplate = template.Must(template.ParseFiles("doc.html"))
 }
 
 func main() {
 	rootpath := "testroot"
 
+	http.Handle("/script/", http.StripPrefix("/script/", http.FileServer(http.Dir("script/"))))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		rootHandler(w, r)
+	})
+	http.HandleFunc("/doc/", func(w http.ResponseWriter, r *http.Request) {
+		docHandler(w, r)
+	})
 	http.HandleFunc("/save", func(w http.ResponseWriter, r *http.Request) {
 		saveHandler(w, r, rootpath)
 	})
@@ -278,12 +318,6 @@ func main() {
 		removeHandler(w, r, rootpath)
 	})
 
-	http.Handle("/script/", http.StripPrefix("/script/", http.FileServer(http.Dir("script/"))))
-	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		rootHandler(w, r)
-	})
 	err := http.ListenAndServe(":8080", nil)
 	if ( err != nil ) {
 		fmt.Fprintln(os.Stderr, err)

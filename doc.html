@@ -1,0 +1,196 @@
+<!DOCTYPE html5>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="/css/default.css">
+	<script type="text/javascript" src="/script/jquery.js"></script>
+</head>
+
+<body>
+
+<div id="title">{{.Title}}</div>
+<div id="tab-selector">
+	{{range .Chapters}}<div id="tab">Capter{{.Num}}</div>{{end}}
+</div>
+<div id="main">
+	{{with index .Chapters 0}}
+	{{range .Snippets}}
+	<div class="snippet-block">
+		<button class="insert button">
+			<span> <!-- why this exist? see http://stackoverflow.com/questions/4929310/why-isnt-css-visibility-working -->
+				<hr class="insert line">
+			</span>
+		</button>
+		<div class="snippet" style="display:inline-block;">
+			<div class="snippet-top">
+				<textarea class="orig">{{.Orig}}</textarea>
+			</div>
+			<div class="snippet-bottom">
+				<textarea class="trans">{{.Trans}}</textarea>
+			</div>
+			<div class="snippet-bar">
+				<button class="cancel button v-middle left red" style="width:80px;height:30px;">Cancel</button>
+				<button class="save button v-middle right blue" style="width:80px;height:30px;">Save</button>
+			</div>
+		</div>
+		<button style="display:inline-block;vertical-align:top;" class="red remove button">-</button>
+	</div>
+	{{end}}
+	{{end}}
+</div>
+
+<!-- learn from http://webcomponents.org/articles/introduction-to-html-imports/ -->
+<template id="snippet-template">
+	<div class="snippet-block">
+		<button class="insert button">
+			<span>
+				<hr class="insert line">
+			</span>
+		</button>
+		<div class="snippet" style="display:inline-block;">
+			<div class="snippet-top">
+				<textarea class="orig"></textarea>
+			</div>
+			<div class="snippet-bottom">
+				<textarea class="trans"></textarea>
+			</div>
+			<div class="snippet-bar">
+				<button class="cancel button v-middle left red" style="width:80px;height:30px;">Cancel</button>
+				<button class="save button v-middle right blue" style="width:80px;height:30px;">Save</button>
+			</div>
+		</div>
+		<button style="display:inline-block;vertical-align:top" class="red remove button">-</button>
+	</div>
+</template>
+
+<!--
+"last snippet-block" is kind of fake snippet-block.
+it doesn't have textarea for editing and live end of #main div.
+use if for insert real last-snippet.
+-->
+<template id="last-snippet-template">
+	<div class="last snippet-block">
+		<button class="insert button">
+			<span>
+				<hr class="insert line">
+			</span>
+		</button>
+	</div>
+</template>
+
+<script type="text/javascript">
+	var lastSnippet = document.querySelector("#last-snippet-template");
+	var lastSnippetClone = document.importNode(lastSnippet.content, true);
+	$("#main").append(lastSnippetClone);
+
+	// insertNewSnippet insert snippet-template when called from insert button.
+	function insertNewSnippet(idx) {
+		var newSnippet = document.querySelector("#snippet-template");
+		var newSnippetClone = document.importNode(newSnippet.content, true);
+		$(newSnippetClone).insertBefore($("#main").find(".snippet-block").eq(idx));
+	}
+
+	$(document).on("click", ".save", function() {
+		$block = $(this).parents(".snippet-block");
+		$snippet = $block.find(".snippet");
+
+		var idx = $block.index();
+		if ( idx == -1 ) {
+			console.log("wrong snippet-block index");
+			return;
+		}
+
+		var path = $("#title").text() + "/" + "0" + "/" + idx;
+		var orig = $snippet.find(".orig").val();
+		var trans = $snippet.find(".trans").val();
+
+		$.ajax({
+			url: "/save",
+			data: {
+				content:"snippet",
+				path:path,
+				orig:orig,
+				trans:trans,
+			},
+			success: function() {
+				console.log("success");
+			}
+		});
+	});
+
+	$(document).on("click", ".insert", function() {
+		$block = $(this).parents(".snippet-block");
+		$snippet = $block.find(".snippet");
+
+		var idx = $block.index();
+		if ( idx == -1 ) {
+			console.log("wrong snippet-block index");
+			return;
+		}
+
+		var path = $("#title").text() + "/" + "0" + "/" + idx;
+
+		$.ajax({
+			url: "/insert",
+			data: {
+				content:"snippet",
+				path:path,
+			},
+			success: function() {
+				insertNewSnippet(idx);
+				console.log("success");
+			}
+		});
+	});
+
+	$(document).on("click", ".remove", function() {
+		$block = $(this).parents(".snippet-block");
+		$snippet = $block.find(".snippet");
+
+		var idx = $block.index();
+		if ( idx == -1 ) {
+			console.log("wrong snippet-block index");
+			return;
+		}
+
+		var path = $("#title").text() + "/" + "0" + "/" + idx;
+
+		$.ajax({
+			url: "/remove",
+			data: {
+				content:"snippet",
+				path:path,
+			},
+			success: function() {
+				$block.remove();
+				console.log("success");
+			}
+		});
+	});
+
+	$("textarea").each(function() {
+		var offset = this.offsetHeight - this.clientHeight;
+		$(this).css('height', this.scrollHeight + offset);
+	});
+
+	$(document).on("input propertychange", "textarea", function() {
+		$(this).parents(".snippet").find(".snippet-bar").css("display", "block");
+		var offset = this.offsetHeight - this.clientHeight;
+		// TODO: $(this).css('height', 'auto') couldn't shirink textarea nicely,
+		// what's the alternatives? no plug-in.
+		$(this).css('height', this.scrollHeight + offset);
+	});
+
+	$(document).on("click", ".button", function() {
+		$(this).parent(".snippet-bar").css("display", "none");
+		$(this).parent().parent().find("textarea").each(function() {
+			var offset = this.offsetHeight - this.clientHeight;
+			$(this).css('height', 'auto').css('height', this.scrollHeight + offset);
+		});
+	});
+</script>
+
+</body>
+
+</html>
