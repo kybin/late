@@ -3,11 +3,26 @@
 
 <head>
 	<meta charset="UTF-8">
+	<title>Late</title>
 	<link rel="stylesheet" type="text/css" href="/css/default.css">
 	<script type="text/javascript" src="/script/jquery.js"></script>
 </head>
 
 <body>
+<div id="title">Late</div>
+<div id="line" style="border-width:1px 0px 0px 0px;border-style:solid;"></div>
+<div id="main">
+	<div class="blank" style="height:20px;"></div>
+	<div id="shelf">
+		{{range $g := .BookGroups}}
+		<div class="row">
+			{{range $b := $g}}
+			<a href='{{printf "/doc/%v" .Title}}' style="width:200;height:150px;border-style:solid;border-radius:8px;padding:5px;margin:20px 10px;display:inline-block">{{.Title}}</a>
+			{{end}}
+		</div>
+		{{end}}
+	</div>
+</div>
 </body>
 
 </html>

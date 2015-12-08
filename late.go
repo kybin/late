@@ -34,10 +34,32 @@ type snippet struct {
 	Trans string
 }
 
+// it grouping books by 4.
+func grouping(books []book) [][]book {
+	grps := make([][]book, 0)
+	g := make([]book, 0)
+	for _, b := range books {
+		g = append(g, b)
+		if len(g) >= 4 {
+			grps = append(grps, g)
+			g = make([]book, 0)
+		}
+	}
+	if len(g) > 0 {
+		grps = append(grps, g)
+	}
+	return grps
+}
+
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	books := scanRootDir()
-	err := indexTemplate.Execute(w, books[0])
+	b := struct{
+		BookGroups [][]book
+	}{
+		BookGroups: grouping(books),
+	}
+	err := indexTemplate.Execute(w, b)
 	if err != nil {
 		log.Fatal(err)
 	}
