@@ -17,7 +17,7 @@
 		{{range $g := .BookGroups}}
 		<div class="row">
 			{{range $b := $g}}
-			<a href='{{printf "/doc/%v" .Title}}' style="width:200;height:150px;border-style:solid;border-radius:8px;padding:5px;margin:20px 10px;display:inline-block">{{.Title}}</a>
+			<a href='{{printf "/doc/%v/0" .Title}}' style="width:200;height:150px;border-style:solid;border-radius:8px;padding:5px;margin:20px 10px;display:inline-block">{{.Title}}</a>
 			{{end}}
 		</div>
 		{{end}}

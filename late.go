@@ -68,24 +68,54 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 func docHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
+	log.Println(r.URL.Path)
 	paths := strings.Split(r.URL.Path, "/")
-	title := paths[len(paths)-1]
 
-	findIdx := -1
-	books := scanRootDir()
-	for i, b := range books {
-		if b.Title == title {
-			findIdx = i
-			break
-		}
-	}
-
-	if findIdx == -1 {
+	title := paths[len(paths)-2]
+	chapNumStr := paths[len(paths)-1]
+	chapNum, err := strconv.Atoi(chapNumStr)
+	if err != nil {
+		log.Println(err)
 		fmt.Fprintf(w, "not found the page")
 		return
 	}
 
-	err := docTemplate.Execute(w, books[findIdx])
+	books := scanRootDir()
+
+	bi := -1
+	for i, b := range books {
+		if b.Title == title {
+			bi = i
+			break
+		}
+	}
+	if bi == -1 {
+		fmt.Fprintf(w, "not found the page")
+		return
+	}
+	bk := books[bi]
+
+	ci := -1
+	for i, c := range bk.Chapters {
+		if c.Num == chapNum {
+			ci = i
+		}
+	}
+	if ci == -1 {
+		fmt.Fprintf(w, "not found the page")
+		return
+	}
+	chap := bk.Chapters[ci]
+
+	data := struct{
+		Book book
+		Chapter chapter
+	}{
+		Book: bk,
+		Chapter: chap,
+	}
+
+	err = docTemplate.Execute(w, data)
 	if err != nil {
 		log.Fatal(err)
 	}
