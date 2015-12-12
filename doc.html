@@ -145,6 +145,11 @@ use if for insert real last-snippet.
 	});
 
 	$(document).on("click", ".remove", function() {
+		var ok = confirm("Do you really want delete it? It cannot be restored.");
+		if ( !ok ) {
+			return;
+		}
+
 		$block = $(this).parents(".snippet-block");
 		$snippet = $block.find(".snippet");
 
