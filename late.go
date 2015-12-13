@@ -150,7 +150,7 @@ func insertHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 
 func insertSnippet(path string) {
 	// before insert the snippet dir, the later dirs should shifted by 1.
-	// if 2 is inserted. n -> n + 1 ... 3 -> 3, 2 -> 3.
+	// if 2 is inserted. n -> n + 1, .. 4 -> 3, 2 -> 3.
 	chapd, snipd := filepath.Split(path)
 	insertIndex, err := strconv.Atoi(snipd)
 	if err != nil {
@@ -214,7 +214,7 @@ func removeSnippet(path string) {
 		log.Fatal(err)
 	}
 	// after remove the snippet dir, the later dirs should renamed to fill hole.
-	// if 2 is removed. 3 -> 2, 4 -> 3
+	// if 2 is removed. 3 -> 2, 4 -> 3, .. n + 1 -> n
 	chapd, snipd := filepath.Split(path)
 	rmIndex, err := strconv.Atoi(snipd)
 	if err != nil {
