@@ -11,7 +11,8 @@
 
 <div id="title">{{.Book.Title}}</div>
 <div id="tab-selector">
-	{{range .Book.Chapters}}<a href='{{printf "/doc/%v/%v" $.Book.Title .Num}}'><div id="tab">Capter{{.Num}}</div></a>{{end}}
+	{{range .Book.Chapters}}<a href='{{printf "/doc/%v/%v" $.Book.Title .Num}}'><div class="tab">{{.Num}}</div></a>{{end}}
+	<a href="javascript:newChapter()"><div class="new-tab">New</div></a>
 </div>
 <div id="main">
 	{{range .Chapter.Snippets}}
@@ -192,6 +193,22 @@ use it for insert real last-snippet.
 			$(this).css('height', 'auto').css('height', this.scrollHeight + offset);
 		});
 	});
+
+	function newChapter() {
+		var i = String(Number($(".tab").last().html()) + 1);
+		var path = $("#title").text() + "/" + i;
+
+		$.ajax({
+			url: "/new/chapter",
+			data: {
+				path: path,
+			},
+			success: function() {
+				console.log("success");
+				location.href = "/doc/" + path;
+			}
+		});
+	}
 </script>
 
 </body>

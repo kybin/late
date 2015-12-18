@@ -152,6 +152,22 @@ func newDocumentHandler(w http.ResponseWriter, r *http.Request, rootpath string)
 	}
 }
 
+func newChapterHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+	log.Println("HI")
+	r.ParseForm()
+	subpath := r.Form["path"][0]
+	path := filepath.Join(rootpath, subpath)
+	log.Println(path)
+	newChapter(path)
+}
+
+func newChapter(path string) {
+	err := os.MkdirAll(path, 0755)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func insertHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	r.ParseForm()
 	subpath := r.Form["path"][0]
@@ -373,6 +389,9 @@ func main() {
 	})
 	http.HandleFunc("/new/doc", func(w http.ResponseWriter, r *http.Request) {
 		newDocumentHandler(w, r, rootpath);
+	})
+	http.HandleFunc("/new/chapter", func(w http.ResponseWriter, r *http.Request) {
+		newChapterHandler(w, r, rootpath)
 	})
 	http.HandleFunc("/save", func(w http.ResponseWriter, r *http.Request) {
 		saveHandler(w, r, rootpath)
