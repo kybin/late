@@ -11,7 +11,7 @@
 
 <div id="title">{{.Book.Title}}</div>
 <div id="tab-selector">
-	{{range .Book.Chapters}}<a href='{{printf "/doc/%v/%v" $.Book.Title .Num}}'><div class="tab">{{.Num}}</div></a>{{end}}
+	{{range .Book.Chapters}}<a href='{{printf "/doc/%v/%v" $.Book.Title .Num}}'><div class="{{if eq .Num $.Chapter.Num}}current {{end}}tab">{{.Num}}</div></a>{{end}}
 	<a href="javascript:newChapter()"><div class="new-tab">New</div></a>
 </div>
 <div id="main">
@@ -100,7 +100,9 @@ use it for insert real last-snippet.
 			return;
 		}
 
-		var path = $("#title").text() + "/" + "0" + "/" + idx;
+		var chapidx = $(".current.tab").html();
+
+		var path = $("#title").text() + "/" + chapidx + "/" + idx;
 		var orig = $snippet.find(".orig").val();
 		var trans = $snippet.find(".trans").val();
 
@@ -128,7 +130,9 @@ use it for insert real last-snippet.
 			return;
 		}
 
-		var path = $("#title").text() + "/" + "0" + "/" + idx;
+		var chapidx = $(".current.tab").html();
+
+		var path = $("#title").text() + "/" + chapidx + "/" + idx;
 
 		$.ajax({
 			url: "/insert",
