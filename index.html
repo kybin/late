@@ -20,7 +20,7 @@
 		{{range $g := .BookGroups}}
 		<div class="row">
 			{{range $b := $g}}
-			<a href='{{printf "/doc/%v/0" .Title}}' style="width:200;height:150px;border-style:solid;border-radius:8px;padding:5px;margin:20px 10px;display:inline-block">{{.Title}}</a>
+			<a class="doc" href='{{printf "/doc/%v/0" .Title}}' style="width:200;height:150px;border-style:solid;border-radius:8px;padding:5px;margin:20px 10px;display:inline-block">{{.Title}}</a>
 			{{end}}
 		</div>
 		{{end}}
@@ -30,9 +30,27 @@
 <script>
 $("#new").on({
 	"click": function() {
-		name = prompt("what will be the document name?");
-		console.log(name);
-		// TODO: send to /insert
+		title = prompt("what will be the document name?");
+		exist = false;
+		$(".doc").each(function() {
+			if ( this.innerHTML == title ) {
+				exist = true;
+			}
+		});
+		if ( exist ) {
+			console.log("the doc already exist!");
+			return;
+		}
+		console.log("hi");
+		$.ajax({
+			url: "/new/doc",
+			data: {
+				title:title,
+			},
+			success: function() {
+				console.log("success");
+			}
+		});
 	}
 });
 </script>

@@ -141,6 +141,17 @@ func saveSnippet(path, orig, trans string) {
 	}
 }
 
+func newDocumentHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+	r.ParseForm()
+	title := r.Form["title"][0]
+	// also create the first chapter
+	path := filepath.Join(rootpath, title, "0")
+	err := os.MkdirAll(path, 0755)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func insertHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	r.ParseForm()
 	subpath := r.Form["path"][0]
@@ -359,6 +370,9 @@ func main() {
 	})
 	http.HandleFunc("/doc/", func(w http.ResponseWriter, r *http.Request) {
 		docHandler(w, r)
+	})
+	http.HandleFunc("/new/doc", func(w http.ResponseWriter, r *http.Request) {
+		newDocumentHandler(w, r, rootpath);
 	})
 	http.HandleFunc("/save", func(w http.ResponseWriter, r *http.Request) {
 		saveHandler(w, r, rootpath)
