@@ -311,6 +311,7 @@ func scanRootDir() []book {
 		if err != nil {
 			log.Fatal(err)
 		}
+		sort.Sort(byIndex(chapterFiles))
 		for _, cf := range chapterFiles {
 			if !cf.IsDir() {
 				continue
@@ -325,6 +326,7 @@ func scanRootDir() []book {
 			if err != nil {
 				log.Fatal(err)
 			}
+			sort.Sort(byIndex(snippetFiles))
 			var orig, trans string
 			for _, f := range snippetFiles {
 				if !f.IsDir() {
