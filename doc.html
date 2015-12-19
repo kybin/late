@@ -162,7 +162,9 @@ use it for insert real last-snippet.
 			return;
 		}
 
-		var path = $("#title").text() + "/" + "0" + "/" + idx;
+		var chapidx = $(".current.tab").html();
+
+		var path = $("#title").text() + "/" + chapidx + "/" + idx;
 
 		$.ajax({
 			url: "/remove",
