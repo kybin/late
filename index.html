@@ -24,6 +24,9 @@
 				<a href='{{printf "/doc/%v/0" .Title}}'><div class="inline" style="width:173px;">{{.Title}}</div></a>
 				<div class="inline remove button">-</div>
 				<hr style="height:0px;border-style:none;border-top:1px solid lightgray">
+				{{range $ch := .Chapters}}
+				<a href='{{printf "/doc/%v/%v" $b.Title .Num}}' style="text-decoration:none">{{.Num}}</a>
+				{{end}}
 			</div>
 			{{end}}
 		</div>
