@@ -11,6 +11,16 @@
 	border-width:1px;
 }
 
+.doc {
+	width:200px;
+	height:150px;
+	border-style:solid;
+	border-radius:8px;
+	padding:5px;
+	margin:20px 10px;
+	display:inline-block;
+}
+
 .tab, .new-tab {
 	float:left;
 	width:80px;
