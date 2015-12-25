@@ -18,9 +18,9 @@
 	<div class="blank" style="height:20px;"></div>
 	<div id="shelf">
 		{{range $g := .BookGroups}}
-		<div class="row">
+		<div class="row" style="width:1000px;">
 			{{range $b := $g}}
-			<a class="doc" href='{{printf "/doc/%v/0" .Title}}' style="width:200;height:150px;border-style:solid;border-radius:8px;padding:5px;margin:20px 10px;display:inline-block">{{.Title}}</a>
+			<a class="doc" href='{{printf "/doc/%v/0" .Title}}' style="width:200px;height:150px;border-style:solid;border-radius:8px;padding:5px;margin:20px 10px;display:inline-block">{{.Title}}</a>
 			{{end}}
 		</div>
 		{{end}}
