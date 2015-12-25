@@ -19,6 +19,7 @@
 	padding:5px;
 	margin:20px 10px;
 	display:inline-block;
+	background-color:WhiteSmoke;
 }
 
 .tab, .new-tab {
@@ -153,6 +154,10 @@
 
 .red {
 	background-color:#ff704d;
+}
+
+.inline {
+	display:inline-block;
 }
 
 textarea {

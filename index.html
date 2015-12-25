@@ -18,9 +18,13 @@
 	<div class="blank" style="height:20px;"></div>
 	<div id="shelf">
 		{{range $g := .BookGroups}}
-		<div class="row" style="width:1000px;">
+		<div class="row" style="width:970px;">
 			{{range $b := $g}}
-			<a href='{{printf "/doc/%v/0" .Title}}'><div class="doc">{{.Title}}</div></a>
+			<div class="doc">
+				<a href='{{printf "/doc/%v/0" .Title}}'><div class="inline" style="width:173px;">{{.Title}}</div></a>
+				<div class="inline remove button">-</div>
+				<hr style="height:0px;border-style:none;border-top:1px solid lightgray">
+			</div>
 			{{end}}
 		</div>
 		{{end}}
