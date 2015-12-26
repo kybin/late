@@ -107,9 +107,8 @@ use it for insert real last-snippet.
 		var trans = $snippet.find(".trans").val();
 
 		$.ajax({
-			url: "/save",
+			url: "/save/snippet",
 			data: {
-				content:"snippet",
 				path:path,
 				orig:orig,
 				trans:trans,
@@ -135,9 +134,8 @@ use it for insert real last-snippet.
 		var path = $("#title").text() + "/" + chapidx + "/" + idx;
 
 		$.ajax({
-			url: "/insert",
+			url: "/insert/snippet",
 			data: {
-				content:"snippet",
 				path:path,
 			},
 			success: function() {
@@ -167,9 +165,8 @@ use it for insert real last-snippet.
 		var path = $("#title").text() + "/" + chapidx + "/" + idx;
 
 		$.ajax({
-			url: "/remove",
+			url: "/remove/snippet",
 			data: {
-				content:"snippet",
 				path:path,
 			},
 			success: function() {

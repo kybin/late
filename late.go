@@ -121,7 +121,7 @@ func docHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func saveHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+func saveSnippetHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	r.ParseForm()
 	subpath := r.Form["path"][0]
 	path := filepath.Join(rootpath, subpath)
@@ -168,7 +168,7 @@ func newChapter(path string) {
 	}
 }
 
-func insertHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+func insertSnippetHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	r.ParseForm()
 	subpath := r.Form["path"][0]
 	path := filepath.Join(rootpath, subpath)
@@ -220,7 +220,7 @@ func insertSnippet(path string) {
 	}
 }
 
-func removeHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+func removeSnippetHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	r.ParseForm()
 	subpath := r.Form["path"][0]
 	path := filepath.Join(rootpath, subpath)
@@ -395,14 +395,14 @@ func main() {
 	http.HandleFunc("/new/chapter", func(w http.ResponseWriter, r *http.Request) {
 		newChapterHandler(w, r, rootpath)
 	})
-	http.HandleFunc("/save", func(w http.ResponseWriter, r *http.Request) {
-		saveHandler(w, r, rootpath)
+	http.HandleFunc("/save/snippet", func(w http.ResponseWriter, r *http.Request) {
+		saveSnippetHandler(w, r, rootpath)
 	})
-	http.HandleFunc("/insert", func(w http.ResponseWriter, r *http.Request) {
-		insertHandler(w, r, rootpath)
+	http.HandleFunc("/insert/snippet", func(w http.ResponseWriter, r *http.Request) {
+		insertSnippetHandler(w, r, rootpath)
 	})
-	http.HandleFunc("/remove", func(w http.ResponseWriter, r *http.Request) {
-		removeHandler(w, r, rootpath)
+	http.HandleFunc("/remove/snippet", func(w http.ResponseWriter, r *http.Request) {
+		removeSnippetHandler(w, r, rootpath)
 	})
 
 	err := http.ListenAndServe(":8080", nil)
