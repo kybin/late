@@ -36,7 +36,7 @@
 		</div>
 		<div class="snippet-side">
 			<button class="red remove button" style="margin-bottom:15px;">-</button>
-			<button class="one-liner button">1</button>
+			<button class="oneliner button">1</button>
 		</div>
 	</div>
 	{{end}}
@@ -64,7 +64,7 @@
 		</div>
 		<div class="snippet-side">
 			<button class="red remove button" style="margin-bottom:15px;">-</button>
-			<button class="one-liner button">1</button>
+			<button class="oneliner button">1</button>
 		</div>
 	</div>
 </template>
@@ -177,6 +177,32 @@ use it for insert real last-snippet.
 			},
 			success: function() {
 				$block.remove();
+				console.log("success");
+			}
+		});
+	});
+
+	$(document).on("click", ".oneliner.button", function() {
+		$block = $(this).parents(".snippet-block");
+		$snippet = $block.find(".snippet");
+
+		var idx = $block.index();
+		if ( idx == -1 ) {
+			console.log("wrong snippet-block index");
+			return;
+		}
+
+		var chapidx = $(".current.tab").html();
+
+		var path = $("#title").text() + "/" + chapidx + "/" + idx;
+
+		$.ajax({
+			url: "/oneline/snippet",
+			data: {
+				path:path,
+			},
+			success: function() {
+				// TODO: get snippet contents
 				console.log("success");
 			}
 		});

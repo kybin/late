@@ -11,6 +11,7 @@ import (
 	"sort"
 	"fmt"
 	"strings"
+	"bytes"
 )
 
 // directory struct: {root}/{book title}/{chapter num}/{block num}
@@ -291,6 +292,44 @@ func removeSnippet(path string) {
 	}
 }
 
+// onelineSnippetHander handles request to /oneline/snippet.
+func onelineSnippetHander(w http.ResponseWriter, r *http.Request, rootpath string) {
+	r.ParseForm()
+	subpath := r.Form["path"][0]
+	path := filepath.Join(rootpath, subpath)
+	log.Println("oneline : " + path)
+	onelineSnippet(path)
+}
+
+// onelineSnippet makes the snippet one-liner.
+// when data copy from other documents (eg. pdf). they often have line endings for themselves.
+// user should easily remove it.
+func onelineSnippet(path string) {
+	err := onelining(path + "/orig")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = onelining(path + "/trans")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// onelining removes windows/unix line endings from file contents.
+func onelining(path string) error {
+	contents, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	contents = bytes.Replace(contents, []byte("\r\n"), []byte(""), -1)
+	contents = bytes.Replace(contents, []byte("\n"), []byte(""), -1)
+	err = ioutil.WriteFile(path, contents, 0644)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 type byIndex []os.FileInfo
 
 func (b byIndex) Len() int {
@@ -426,6 +465,9 @@ func main() {
 	})
 	http.HandleFunc("/remove/snippet", func(w http.ResponseWriter, r *http.Request) {
 		removeSnippetHandler(w, r, rootpath)
+	})
+	http.HandleFunc("/oneline/snippet", func(w http.ResponseWriter, r *http.Request) {
+		onelineSnippetHander(w, r, rootpath)
 	})
 
 	err := http.ListenAndServe(":8080", nil)
