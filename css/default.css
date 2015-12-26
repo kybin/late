@@ -87,6 +87,12 @@
 	padding:3px 10px;
 }
 
+.snippet-side {
+	display:inline-block;
+	width:25px;
+	vertical-align:top;
+}
+
 .remove.button {
 	width:20px;
 	height:20px;
@@ -117,6 +123,20 @@
 	visibility:visible;
 }
 
+.one-liner.button {
+	width:20px;
+	height:20px;
+	border-style:solid;
+	border-radius:3px;
+	border-width:1px;
+	text-align:center;
+	background-color:white;
+}
+
+.one-liner.button:hover {
+	background-color:lightgreen;
+}
+
 .insert.line {
 	width:400px;
 	height:0px;
@@ -132,7 +152,7 @@
 	border-color:#999999;
 	border-radius:6px;
 	text-align:center;
-	color:white;
+	background-color:white;
 }
 
 .v-middle {
