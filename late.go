@@ -245,6 +245,9 @@ func removeSnippetHandler(w http.ResponseWriter, r *http.Request, rootpath strin
 }
 
 func removeSnippet(path string) {
+	if path == "" {
+		log.Fatal("should not delete late root")
+	}
 	err := os.Remove(filepath.Join(path, "orig"));
 	if err != nil {
 		log.Fatal(err)
