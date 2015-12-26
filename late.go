@@ -407,7 +407,7 @@ func main() {
 		docHandler(w, r)
 	})
 	http.HandleFunc("/new/doc", func(w http.ResponseWriter, r *http.Request) {
-		newDocumentHandler(w, r, rootpath);
+		newDocumentHandler(w, r, rootpath)
 	})
 	http.HandleFunc("/remove/doc", func(w http.ResponseWriter, r *http.Request) {
 		removeDocumentHandler(w, r, rootpath)
