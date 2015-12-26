@@ -62,7 +62,7 @@
 }
 
 .snippet {
-	width:770px;
+	width:760px;
 	border-style:solid;
 	border-width:3px;
 	border-radius:8px;
@@ -164,7 +164,7 @@
 textarea {
 	padding:5px 8px 12px 8px;
 	border:none;
-	width:765px;
+	width:750px;
 	min-height:80px;
 	height:auto;
 	overflow-y:hidden;
