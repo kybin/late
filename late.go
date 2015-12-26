@@ -152,6 +152,23 @@ func newDocumentHandler(w http.ResponseWriter, r *http.Request, rootpath string)
 	}
 }
 
+func removeDocumentHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+	r.ParseForm()
+	subpath := r.Form["path"][0]
+	path := filepath.Join(rootpath, subpath)
+	removeDocument(path)
+}
+
+func removeDocument(path string) {
+	if path == "" {
+		log.Fatal("should not delete late root")
+	}
+	err := os.RemoveAll(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func newChapterHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	log.Println("HI")
 	r.ParseForm()
@@ -391,6 +408,9 @@ func main() {
 	})
 	http.HandleFunc("/new/doc", func(w http.ResponseWriter, r *http.Request) {
 		newDocumentHandler(w, r, rootpath);
+	})
+	http.HandleFunc("/remove/doc", func(w http.ResponseWriter, r *http.Request) {
+		removeDocumentHandler(w, r, rootpath)
 	})
 	http.HandleFunc("/new/chapter", func(w http.ResponseWriter, r *http.Request) {
 		newChapterHandler(w, r, rootpath)

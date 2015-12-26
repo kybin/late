@@ -20,7 +20,7 @@
 		{{range $g := .BookGroups}}
 		<div class="row" style="width:970px;">
 			{{range $b := $g}}
-			<div class="doc">
+			<div class="doc" data-title='{{.Title}}'>
 				<a href='{{printf "/doc/%v/0" .Title}}'><div class="inline" style="width:173px;">{{.Title}}</div></a>
 				<div class="inline remove button">-</div>
 				<hr style="height:0px;border-style:none;border-top:1px solid lightgray">
@@ -60,6 +60,27 @@ $("#new").on({
 		});
 	}
 });
+
+$(document).on("click", ".remove.button", function() {
+	var $doc = $(this).parent(".doc");
+	var title = $doc.data("title");
+	var ok = confirm("Do you really want delete '" + title + "'? It cannot be restored.");
+	if ( !ok ) {
+		return;
+	}
+
+	$.ajax({
+		url: "/remove/doc",
+		data: {
+			path:title,
+		},
+		success: function() {
+			$doc.hide();
+			console.log("success");
+		}
+	});
+});
+
 </script>
 </body>
 
