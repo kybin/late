@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"strings"
 	"bytes"
+	"encoding/json"
 )
 
 // directory struct: {root}/{book title}/{chapter num}/{block num}
@@ -31,8 +32,8 @@ type chapter struct {
 // snippet is a string block of resonable length.
 // user will decide how long will it be.
 type snippet struct {
-	Orig string
-	Trans string
+	Orig string `json:"orig"`
+	Trans string `json:"trans"`
 }
 
 // it grouping books by 4.
@@ -122,26 +123,6 @@ func docHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func saveSnippetHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
-	r.ParseForm()
-	subpath := r.Form["path"][0]
-	path := filepath.Join(rootpath, subpath)
-	orig := r.Form["orig"][0]
-	trans := r.Form["trans"][0]
-	saveSnippet(path, orig, trans)
-}
-
-func saveSnippet(path, orig, trans string) {
-	err := ioutil.WriteFile(path + "/orig", []byte(orig), 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = ioutil.WriteFile(path + "/trans", []byte(trans), 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func newDocumentHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
 	r.ParseForm()
 	title := r.Form["title"][0]
@@ -184,6 +165,56 @@ func newChapter(path string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func saveSnippetHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+	r.ParseForm()
+	subpath := r.Form["path"][0]
+	path := filepath.Join(rootpath, subpath)
+	orig := r.Form["orig"][0]
+	trans := r.Form["trans"][0]
+	saveSnippet(path, orig, trans)
+}
+
+func saveSnippet(path, orig, trans string) {
+	err := ioutil.WriteFile(path + "/orig", []byte(orig), 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = ioutil.WriteFile(path + "/trans", []byte(trans), 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// contentsSnippetHandler handles /contents/snippet request,
+// it responses original contents of orig, trans snippets as json format.
+func contentsSnippetHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
+	r.ParseForm()
+	subpath := r.Form["path"][0]
+	path := filepath.Join(rootpath, subpath)
+
+	orig, err := ioutil.ReadFile(path + "/orig")
+	if err != nil {
+		log.Fatal(err)
+	}
+	trans, err := ioutil.ReadFile(path + "/trans")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	snip := snippet{
+		Orig: string(orig),
+		Trans: string(trans),
+	}
+
+	js, err := json.Marshal(snip)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
 
 func insertSnippetHandler(w http.ResponseWriter, r *http.Request, rootpath string) {
@@ -459,6 +490,9 @@ func main() {
 	})
 	http.HandleFunc("/save/snippet", func(w http.ResponseWriter, r *http.Request) {
 		saveSnippetHandler(w, r, rootpath)
+	})
+	http.HandleFunc("/contents/snippet", func(w http.ResponseWriter, r *http.Request) {
+		contentsSnippetHandler(w, r, rootpath)
 	})
 	http.HandleFunc("/insert/snippet", func(w http.ResponseWriter, r *http.Request) {
 		insertSnippetHandler(w, r, rootpath)

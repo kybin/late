@@ -125,6 +125,39 @@ $(document).on("click", ".save.button", function() {
 	});
 });
 
+// when press the cancel button,
+// server will send the original contents of the snippets.
+$(document).on("click", ".cancel.button", function() {
+	$block = $(this).parents(".snippet-block");
+	$snippet = $block.find(".snippet");
+
+	var idx = $block.index();
+	if ( idx == -1 ) {
+		console.log("wrong snippet-block index");
+		return;
+	}
+
+	var chapidx = $(".current.tab").html();
+
+	var path = $("#title").text() + "/" + chapidx + "/" + idx;
+
+	$.ajax({
+		url: "/contents/snippet",
+		data: {
+			path:path,
+		},
+		dataType: "json",
+		error: function() {
+			console.log("error");
+		},
+		success: function(resp) {
+			$snippet.find(".orig").val(resp.orig);
+			$snippet.find(".trans").val(resp.trans);
+			console.log("success");
+		}
+	});
+});
+
 $(document).on("click", ".insert.button", function() {
 	$block = $(this).parents(".snippet-block");
 	$snippet = $block.find(".snippet");
