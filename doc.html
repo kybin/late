@@ -216,34 +216,16 @@ $(document).on("click", ".remove.button", function() {
 });
 
 $(document).on("click", ".oneliner.button", function() {
-	$block = $(this).parents(".snippet-block");
-	$snippet = $block.find(".snippet");
+	var $block = $(this).parents(".snippet-block");
+	var $snippet = $block.find(".snippet");
 
-	var idx = $block.index();
-	if ( idx == -1 ) {
-		console.log("wrong snippet-block index");
-		return;
-	}
+	var orig = $snippet.find(".orig").val();
+	$snippet.find(".orig").val(orig.replace(/\n/g, " "));
 
-	var chapidx = $(".current.tab").html();
+	var trans = $snippet.find(".trans").val();
+	$snippet.find(".trans").val(trans.replace(/\n/g, " "));
 
-	var path = $("#title").text() + "/" + chapidx + "/" + idx;
-
-	$.ajax({
-		url: "/oneline/snippet",
-		data: {
-			path:path,
-		},
-		dataType: "json",
-		error: function() {
-			console.log("error");
-		},
-		success: function(resp) {
-			$snippet.find(".orig").val(resp.orig);
-			$snippet.find(".trans").val(resp.trans);
-			console.log("success");
-		}
-	});
+	$snippet.find(".snippet-bar").css("display", "block");
 });
 
 $("textarea").each(function() {
