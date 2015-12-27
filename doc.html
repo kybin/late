@@ -96,7 +96,7 @@ use it for insert real last-snippet.
 		$(newSnippetClone).insertBefore($("#main").find(".snippet-block").eq(idx));
 	}
 
-	$(document).on("click", ".save", function() {
+	$(document).on("click", ".save.button", function() {
 		$block = $(this).parents(".snippet-block");
 		$snippet = $block.find(".snippet");
 
@@ -125,7 +125,7 @@ use it for insert real last-snippet.
 		});
 	});
 
-	$(document).on("click", ".insert", function() {
+	$(document).on("click", ".insert.button", function() {
 		$block = $(this).parents(".snippet-block");
 		$snippet = $block.find(".snippet");
 
@@ -151,7 +151,7 @@ use it for insert real last-snippet.
 		});
 	});
 
-	$(document).on("click", ".remove", function() {
+	$(document).on("click", ".remove.button", function() {
 		var ok = confirm("Do you really want delete it? It cannot be restored.");
 		if ( !ok ) {
 			return;
