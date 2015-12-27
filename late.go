@@ -324,41 +324,48 @@ func removeSnippet(path string) {
 }
 
 // onelineSnippetHander handles request to /oneline/snippet.
+// When data copied from other documents (eg. pdf). they often have line endings for themselves.
+// So sometimes user wants remove windows/unix line endings from orig/trans snippet files.
 func onelineSnippetHander(w http.ResponseWriter, r *http.Request, rootpath string) {
 	r.ParseForm()
 	subpath := r.Form["path"][0]
 	path := filepath.Join(rootpath, subpath)
 	log.Println("oneline : " + path)
-	onelineSnippet(path)
-}
 
-// onelineSnippet makes the snippet one-liner.
-// when data copy from other documents (eg. pdf). they often have line endings for themselves.
-// user should easily remove it.
-func onelineSnippet(path string) {
-	err := onelining(path + "/orig")
+	orig, err := ioutil.ReadFile(path+"/orig")
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = onelining(path + "/trans")
+	orig = bytes.Replace(orig, []byte("\r\n"), []byte(""), -1)
+	orig = bytes.Replace(orig, []byte("\n"), []byte(""), -1)
+	err = ioutil.WriteFile(path+"/orig", orig, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
-}
 
-// onelining removes windows/unix line endings from file contents.
-func onelining(path string) error {
-	contents, err := ioutil.ReadFile(path)
+	trans, err := ioutil.ReadFile(path+"/trans")
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
-	contents = bytes.Replace(contents, []byte("\r\n"), []byte(""), -1)
-	contents = bytes.Replace(contents, []byte("\n"), []byte(""), -1)
-	err = ioutil.WriteFile(path, contents, 0644)
+	trans = bytes.Replace(trans, []byte("\r\n"), []byte(""), -1)
+	trans = bytes.Replace(trans, []byte("\n"), []byte(""), -1)
+	err = ioutil.WriteFile(path+"/trans", trans, 0644)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
-	return nil
+
+	snip := snippet{
+		Orig: string(orig),
+		Trans: string(trans),
+	}
+
+	js, err := json.Marshal(snip)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
 
 type byIndex []os.FileInfo

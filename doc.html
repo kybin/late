@@ -234,8 +234,13 @@ $(document).on("click", ".oneliner.button", function() {
 		data: {
 			path:path,
 		},
-		success: function() {
-			// TODO: get snippet contents
+		dataType: "json",
+		error: function() {
+			console.log("error");
+		},
+		success: function(resp) {
+			$snippet.find(".orig").val(resp.orig);
+			$snippet.find(".trans").val(resp.trans);
 			console.log("success");
 		}
 	});
