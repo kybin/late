@@ -85,165 +85,165 @@ use it for insert real last-snippet.
 </template>
 
 <script type="text/javascript">
-	var lastSnippet = document.querySelector("#last-snippet-template");
-	var lastSnippetClone = document.importNode(lastSnippet.content, true);
-	$("#main").append(lastSnippetClone);
+var lastSnippet = document.querySelector("#last-snippet-template");
+var lastSnippetClone = document.importNode(lastSnippet.content, true);
+$("#main").append(lastSnippetClone);
 
-	// insertNewSnippet insert snippet-template when called from insert button.
-	function insertNewSnippet(idx) {
-		var newSnippet = document.querySelector("#snippet-template");
-		var newSnippetClone = document.importNode(newSnippet.content, true);
-		$(newSnippetClone).insertBefore($("#main").find(".snippet-block").eq(idx));
+// insertNewSnippet insert snippet-template when called from insert button.
+function insertNewSnippet(idx) {
+	var newSnippet = document.querySelector("#snippet-template");
+	var newSnippetClone = document.importNode(newSnippet.content, true);
+	$(newSnippetClone).insertBefore($("#main").find(".snippet-block").eq(idx));
+}
+
+$(document).on("click", ".save.button", function() {
+	$block = $(this).parents(".snippet-block");
+	$snippet = $block.find(".snippet");
+
+	var idx = $block.index();
+	if ( idx == -1 ) {
+		console.log("wrong snippet-block index");
+		return;
 	}
 
-	$(document).on("click", ".save.button", function() {
-		$block = $(this).parents(".snippet-block");
-		$snippet = $block.find(".snippet");
+	var chapidx = $(".current.tab").html();
 
-		var idx = $block.index();
-		if ( idx == -1 ) {
-			console.log("wrong snippet-block index");
-			return;
+	var path = $("#title").text() + "/" + chapidx + "/" + idx;
+	var orig = $snippet.find(".orig").val();
+	var trans = $snippet.find(".trans").val();
+
+	$.ajax({
+		url: "/save/snippet",
+		data: {
+			path:path,
+			orig:orig,
+			trans:trans,
+		},
+		success: function() {
+			console.log("success");
 		}
-
-		var chapidx = $(".current.tab").html();
-
-		var path = $("#title").text() + "/" + chapidx + "/" + idx;
-		var orig = $snippet.find(".orig").val();
-		var trans = $snippet.find(".trans").val();
-
-		$.ajax({
-			url: "/save/snippet",
-			data: {
-				path:path,
-				orig:orig,
-				trans:trans,
-			},
-			success: function() {
-				console.log("success");
-			}
-		});
 	});
+});
 
-	$(document).on("click", ".insert.button", function() {
-		$block = $(this).parents(".snippet-block");
-		$snippet = $block.find(".snippet");
+$(document).on("click", ".insert.button", function() {
+	$block = $(this).parents(".snippet-block");
+	$snippet = $block.find(".snippet");
 
-		var idx = $block.index();
-		if ( idx == -1 ) {
-			console.log("wrong snippet-block index");
-			return;
-		}
-
-		var chapidx = $(".current.tab").html();
-
-		var path = $("#title").text() + "/" + chapidx + "/" + idx;
-
-		$.ajax({
-			url: "/insert/snippet",
-			data: {
-				path:path,
-			},
-			success: function() {
-				insertNewSnippet(idx);
-				console.log("success");
-			}
-		});
-	});
-
-	$(document).on("click", ".remove.button", function() {
-		var ok = confirm("Do you really want delete it? It cannot be restored.");
-		if ( !ok ) {
-			return;
-		}
-
-		$block = $(this).parents(".snippet-block");
-		$snippet = $block.find(".snippet");
-
-		var idx = $block.index();
-		if ( idx == -1 ) {
-			console.log("wrong snippet-block index");
-			return;
-		}
-
-		var chapidx = $(".current.tab").html();
-
-		var path = $("#title").text() + "/" + chapidx + "/" + idx;
-
-		$.ajax({
-			url: "/remove/snippet",
-			data: {
-				path:path,
-			},
-			success: function() {
-				$block.remove();
-				console.log("success");
-			}
-		});
-	});
-
-	$(document).on("click", ".oneliner.button", function() {
-		$block = $(this).parents(".snippet-block");
-		$snippet = $block.find(".snippet");
-
-		var idx = $block.index();
-		if ( idx == -1 ) {
-			console.log("wrong snippet-block index");
-			return;
-		}
-
-		var chapidx = $(".current.tab").html();
-
-		var path = $("#title").text() + "/" + chapidx + "/" + idx;
-
-		$.ajax({
-			url: "/oneline/snippet",
-			data: {
-				path:path,
-			},
-			success: function() {
-				// TODO: get snippet contents
-				console.log("success");
-			}
-		});
-	});
-
-	$("textarea").each(function() {
-		var offset = this.offsetHeight - this.clientHeight;
-		$(this).css('height', this.scrollHeight + offset);
-	});
-
-	$(document).on("input propertychange", "textarea", function() {
-		$(this).parents(".snippet").find(".snippet-bar").css("display", "block");
-		var offset = this.offsetHeight - this.clientHeight;
-		// TODO: $(this).css('height', 'auto') couldn't shirink textarea nicely,
-		// what's the alternatives? no plug-in.
-		$(this).css('height', this.scrollHeight + offset);
-	});
-
-	$(document).on("click", ".button", function() {
-		$(this).parent(".snippet-bar").css("display", "none");
-		$(this).parent().parent().find("textarea").each(function() {
-			var offset = this.offsetHeight - this.clientHeight;
-			$(this).css('height', 'auto').css('height', this.scrollHeight + offset);
-		});
-	});
-
-	function newChapter() {
-		var i = String(Number($(".tab").last().html()) + 1);
-		var path = $("#title").text() + "/" + i;
-
-		$.ajax({
-			url: "/new/chapter",
-			data: {
-				path: path,
-			},
-			success: function() {
-				console.log("success");
-				location.href = "/doc/" + path;
-			}
-		});
+	var idx = $block.index();
+	if ( idx == -1 ) {
+		console.log("wrong snippet-block index");
+		return;
 	}
+
+	var chapidx = $(".current.tab").html();
+
+	var path = $("#title").text() + "/" + chapidx + "/" + idx;
+
+	$.ajax({
+		url: "/insert/snippet",
+		data: {
+			path:path,
+		},
+		success: function() {
+			insertNewSnippet(idx);
+			console.log("success");
+		}
+	});
+});
+
+$(document).on("click", ".remove.button", function() {
+	var ok = confirm("Do you really want delete it? It cannot be restored.");
+	if ( !ok ) {
+		return;
+	}
+
+	$block = $(this).parents(".snippet-block");
+	$snippet = $block.find(".snippet");
+
+	var idx = $block.index();
+	if ( idx == -1 ) {
+		console.log("wrong snippet-block index");
+		return;
+	}
+
+	var chapidx = $(".current.tab").html();
+
+	var path = $("#title").text() + "/" + chapidx + "/" + idx;
+
+	$.ajax({
+		url: "/remove/snippet",
+		data: {
+			path:path,
+		},
+		success: function() {
+			$block.remove();
+			console.log("success");
+		}
+	});
+});
+
+$(document).on("click", ".oneliner.button", function() {
+	$block = $(this).parents(".snippet-block");
+	$snippet = $block.find(".snippet");
+
+	var idx = $block.index();
+	if ( idx == -1 ) {
+		console.log("wrong snippet-block index");
+		return;
+	}
+
+	var chapidx = $(".current.tab").html();
+
+	var path = $("#title").text() + "/" + chapidx + "/" + idx;
+
+	$.ajax({
+		url: "/oneline/snippet",
+		data: {
+			path:path,
+		},
+		success: function() {
+			// TODO: get snippet contents
+			console.log("success");
+		}
+	});
+});
+
+$("textarea").each(function() {
+	var offset = this.offsetHeight - this.clientHeight;
+	$(this).css('height', this.scrollHeight + offset);
+});
+
+$(document).on("input propertychange", "textarea", function() {
+	$(this).parents(".snippet").find(".snippet-bar").css("display", "block");
+	var offset = this.offsetHeight - this.clientHeight;
+	// TODO: $(this).css('height', 'auto') couldn't shirink textarea nicely,
+	// what's the alternatives? no plug-in.
+	$(this).css('height', this.scrollHeight + offset);
+});
+
+$(document).on("click", ".button", function() {
+	$(this).parent(".snippet-bar").css("display", "none");
+	$(this).parent().parent().find("textarea").each(function() {
+		var offset = this.offsetHeight - this.clientHeight;
+		$(this).css('height', 'auto').css('height', this.scrollHeight + offset);
+	});
+});
+
+function newChapter() {
+	var i = String(Number($(".tab").last().html()) + 1);
+	var path = $("#title").text() + "/" + i;
+
+	$.ajax({
+		url: "/new/chapter",
+		data: {
+			path: path,
+		},
+		success: function() {
+			console.log("success");
+			location.href = "/doc/" + path;
+		}
+	});
+}
 </script>
 
 </body>
