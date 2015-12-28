@@ -10,9 +10,8 @@
 
 <body>
 <div id="title">Late</div>
-<div id="line" style="border-width:1px 0px 0px 0px;border-style:solid;"></div>
-<div>
-	<button id="new" style="inline">New</div>
+<div id="tab-selector">
+	<a href="javascript:newDocument()"><div class="new-tab">New</div></a>
 </div>
 <div id="main">
 	<div class="blank" style="height:20px;"></div>
@@ -35,31 +34,30 @@
 </div>
 
 <script>
-$("#new").on({
-	"click": function() {
-		title = prompt("what will be the document name?");
-		exist = false;
-		$(".doc").each(function() {
-			if ( this.innerHTML == title ) {
-				exist = true;
-			}
-		});
-		if ( exist ) {
-			console.log("the doc already exist!");
-			return;
+function newDocument() {
+	title = prompt("what will be the document name?");
+	exist = false;
+	$(".doc").each(function() {
+		if ( this.innerHTML == title ) {
+			exist = true;
 		}
-		console.log("hi");
-		$.ajax({
-			url: "/new/doc",
-			data: {
-				title:title,
-			},
-			success: function() {
-				console.log("success");
-			}
-		});
+	});
+	if ( exist ) {
+		console.log("the doc already exist!");
+		return;
 	}
-});
+
+	$.ajax({
+		url: "/new/doc",
+		data: {
+			title:title,
+		},
+		success: function() {
+			console.log("success");
+			location.href="/";
+		}
+	});
+}
 
 $(document).on("click", ".remove.button", function() {
 	var $doc = $(this).parent(".doc");
