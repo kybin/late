@@ -36,6 +36,9 @@
 <script>
 function newDocument() {
 	title = prompt("what will be the document name?");
+	if ( title === null ) {
+		return;
+	}
 	exist = false;
 	$(".doc").each(function() {
 		if ( this.innerHTML == title ) {
