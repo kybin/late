@@ -10,10 +10,18 @@
 <body>
 
 <div id="top"><a href="/">Late</a> / <span id="title">{{.Book.Title}}</span></div>
+
 <div id="tab-selector">
 	{{range .Book.Chapters}}<a href='{{printf "/doc/%v/%v" $.Book.Title .Num}}'><div class="{{if eq .Num $.Chapter.Num}}current {{end}}tab">{{.Num}}</div></a>{{end}}
 	<a href="javascript:newChapter()"><div class="new-tab">New</div></a>
 </div>
+
+<div id="view-options" style="width:100%;">
+	<div class="show-trans button inline" style="float:right;width:50px;margin:3px;padding:2px;background-color:lightgray;">trans</div>
+	<div class="show-orig button inline" style="float:right;width:50px;margin:3px;padding:2px;background-color:lightgray;">orig</div>
+	<div class="show-all button inline" style="float:right;width:50px;margin:3px;padding:2px;background-color:lightgray;">all</div>
+</div>
+
 <div id="main">
 	{{range .Chapter.Snippets}}
 	<div class="snippet-block">
@@ -264,6 +272,22 @@ function newChapter() {
 		}
 	});
 }
+
+$(document).on("click", ".show-orig.button", function() {
+	$(document).find(".orig").show();
+	$(document).find(".trans").hide();
+});
+
+$(document).on("click", ".show-trans.button", function() {
+	$(document).find(".orig").hide();
+	$(document).find(".trans").show();
+});
+
+$(document).on("click", ".show-all.button", function() {
+	$(document).find(".orig").show();
+	$(document).find(".trans").show();
+});
+
 </script>
 
 </body>
