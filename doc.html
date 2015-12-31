@@ -12,8 +12,7 @@
 <div id="top"><a href="/">Late</a> / <span id="title">{{.Book.Title}}</span></div>
 
 <div id="tab-selector">
-	{{range .Book.Chapters}}<a href='{{printf "/doc/%v/%v" $.Book.Title .Num}}'><div class="{{if eq .Num $.Chapter.Num}}current {{end}}tab">{{.Num}}</div></a>{{end}}
-	<a href="javascript:newChapter()"><div class="new-tab">New</div></a>
+	{{range .Book.Chapters}}<a href='{{printf "/doc/%v/%v" $.Book.Title .Num}}'><div class="{{if eq .Num $.Chapter.Num}}current {{end}}tab">{{.Num}}</div></a>{{end}}<a href="javascript:newChapter()"><div class="new-tab">New</div></a>
 </div>
 
 <div id="view-options" style="width:100%;">

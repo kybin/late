@@ -6,7 +6,6 @@
 }
 
 #tab-selector {
-	height:25px;
 	border-style:none none solid none;
 	border-width:1px;
 }
@@ -24,9 +23,9 @@
 }
 
 .tab, .new-tab {
-	float:left;
+	display:inline-block;
 	width:80px;
-	margin:0px 10px 0px 0px;
+	margin:5px 3px;
 	background-color:PapayaWhip;
 	border-style:solid;
 	border-width:1px;
