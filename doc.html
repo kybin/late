@@ -15,10 +15,10 @@
 	{{range .Book.Chapters}}<a href='{{printf "/doc/%v/%v" $.Book.Title .Num}}'><div class="{{if eq .Num $.Chapter.Num}}current {{end}}tab">{{.Num}}</div></a>{{end}}<a href="javascript:newChapter()"><div class="new-tab">New</div></a>
 </div>
 
-<div id="view-options" style="width:100%;">
-	<div class="show-trans button inline" style="float:right;width:50px;margin:3px;padding:2px;background-color:lightgray;">trans</div>
-	<div class="show-orig button inline" style="float:right;width:50px;margin:3px;padding:2px;background-color:lightgray;">orig</div>
-	<div class="show-all button inline" style="float:right;width:50px;margin:3px;padding:2px;background-color:lightgray;">all</div>
+<div id="toolbar" style="width:100%;">
+	<button class="show-all button">all</button>
+	<button class="show-orig button">orig</button>
+	<button class="show-trans button">trans</button>
 </div>
 
 <div id="main">
