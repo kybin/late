@@ -33,6 +33,7 @@
 			<div class="snippet-top">
 				<textarea class="orig">{{.Orig}}</textarea>
 			</div>
+			<hr class="snippet-divider">
 			<div class="snippet-bottom">
 				<textarea class="trans">{{.Trans}}</textarea>
 			</div>
@@ -61,6 +62,7 @@
 			<div class="snippet-top">
 				<textarea class="orig"></textarea>
 			</div>
+			<hr class="snippet-divider">
 			<div class="snippet-bottom">
 				<textarea class="trans"></textarea>
 			</div>
@@ -273,18 +275,21 @@ function newChapter() {
 }
 
 $(document).on("click", ".show-orig.button", function() {
-	$(document).find(".orig").show();
-	$(document).find(".trans").hide();
+	$(document).find(".snippet-top").show();
+	$(document).find(".snippet-bottom").hide();
+	$(document).find(".snippet-divider").hide();
 });
 
 $(document).on("click", ".show-trans.button", function() {
-	$(document).find(".orig").hide();
-	$(document).find(".trans").show();
+	$(document).find(".snippet-top").hide();
+	$(document).find(".snippet-bottom").show();
+	$(document).find(".snippet-divider").hide();
 });
 
 $(document).on("click", ".show-all.button", function() {
-	$(document).find(".orig").show();
-	$(document).find(".trans").show();
+	$(document).find(".snippet-top").show();
+	$(document).find(".snippet-bottom").show();
+	$(document).find(".snippet-divider").show();
 });
 
 </script>
